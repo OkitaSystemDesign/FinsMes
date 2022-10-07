@@ -46,5 +46,29 @@ namespace FinsMes.Properties {
                 this["SrcIP"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TargetFins {
+            get {
+                return ((string)(this["TargetFins"]));
+            }
+            set {
+                this["TargetFins"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SrcFins {
+            get {
+                return ((string)(this["SrcFins"]));
+            }
+            set {
+                this["SrcFins"] = value;
+            }
+        }
     }
 }
