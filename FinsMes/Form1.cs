@@ -56,10 +56,10 @@ namespace FinsMes
             src.Add(new ItemSet(0x2101, "2101 異常解除"));
             src.Add(new ItemSet(0x2102, "2102 異常履歴"));
             src.Add(new ItemSet(0x2103, "2103 異常履歴クリア"));
-            cmbCmd1.DataSource = src;
-            cmbCmd1.DisplayMember = "Name";
-            cmbCmd1.ValueMember = "Value";
-            cmbCmd1.SelectedIndex = 0;
+            cmbCmd.DataSource = src;
+            cmbCmd.DisplayMember = "Name";
+            cmbCmd.ValueMember = "Value";
+            cmbCmd.SelectedIndex = 0;
 
 
             List<MemType> dst = new List<MemType>();
@@ -74,6 +74,11 @@ namespace FinsMes
             cmbMemType.DisplayMember = "Name";
             cmbMemType.ValueMember = "Value";
             cmbMemType.SelectedIndex = 0;
+
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            tabControl1.ItemSize = new Size(0, 1);
+            tabControl1.SelectedIndex = 1;
+
 
         }
 
@@ -119,7 +124,118 @@ namespace FinsMes
 
         private void btnCreateSendmes_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(cmbCmd1.SelectedValue);
+            byte[] cmd;
+
+            byte[] cmdcode = BitConverter.GetBytes((short)(int)cmbCmd.SelectedValue).Reverse().ToArray();
+
+            switch (cmbCmd.SelectedValue)
+            {
+                case 0x0101:
+                    cmd = new byte[7];
+                    Array.Copy(cmdcode, 0, cmd, 0, 2);
+                    cmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
+                    byte[] address =  AddressArray(txtMemAddress.Text);
+                    Array.Copy(address, 0, cmd, 2, 3);
+                    byte[] memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
+                    Array.Copy(memsize, 0, cmd, 5, memsize.Length);
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void cmbCmd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cmbCmd.SelectedValue)
+            {
+                case 0x0101:
+                    tabControl1.SelectedIndex = 1;
+                    lblWriteData.Visible = false;
+                    txtWriteData.Visible = false;
+                    break;
+
+                case 0x0102:
+                    tabControl1.SelectedIndex = 1;
+                    lblWriteData.Visible = true;
+                    txtWriteData.Visible = true;
+                    break;
+
+                case 0x0103:
+                    tabControl1.SelectedIndex = 1;
+                    lblWriteData.Visible = true;
+                    txtWriteData.Visible = true;
+                    break;
+
+                case 0x0104:
+                    tabControl1.SelectedIndex = 2;
+                    break;
+
+                case 0x0105:
+                    tabControl1.SelectedIndex = 3;
+                    break;
+
+                case 0x0401:
+                    tabControl1.SelectedIndex = 4;
+                    break;
+
+                case 0x0402:
+                    tabControl1.SelectedIndex = 0;
+                    break;
+
+                case 0x0501:
+                    tabControl1.SelectedIndex = 0;
+                    break;
+
+                case 0x0601:
+                    tabControl1.SelectedIndex = 0;
+                    break;
+
+                case 0x0620:
+                    tabControl1.SelectedIndex = 5;
+                    break;
+
+                case 0x0701:
+                    tabControl1.SelectedIndex = 0;
+                    break;
+
+                case 0x0702:
+                    tabControl1.SelectedIndex = 6;
+                    break;
+
+                case 0x2101:
+                    tabControl1.SelectedIndex = 7;
+                    break;
+
+                case 0x2102:
+                    tabControl1.SelectedIndex = 8;
+                    break;
+
+                case 0x2103:
+                    tabControl1.SelectedIndex = 0;
+                    break;
+            }
+        }
+
+        private byte[] AddressArray(string adr)
+        {
+            byte[] bytes = new byte[3];
+            if (adr.IndexOf('.') == -1)
+            {
+                byte[] address = BitConverter.GetBytes(short.Parse(adr)).Reverse().ToArray();
+                Array.Copy(address, 0, bytes, 0, address.Length);
+                bytes[2] = 0x00;
+            }
+            else
+            {
+                byte[] address = BitConverter.GetBytes(short.Parse(adr.Split('.')[0])).Reverse().ToArray();
+                Array.Copy(address, 0, bytes, 0, address.Length);
+                bytes[2] = Convert.ToByte(adr.Split('.')[1]);
+
+            }
+
+            return bytes;
         }
     }
 }
