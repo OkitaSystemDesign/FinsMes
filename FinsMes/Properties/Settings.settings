@@ -9,7 +9,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TargetFins" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">0.1.0</Value>
     </Setting>
     <Setting Name="SrcFins" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

@@ -13,6 +13,9 @@ namespace FinsMes
 {
     public partial class Form1 : Form
     {
+        private bool connected = false;
+        private FinsMessage fins = null;
+
         public class ItemSet
         {
             public string Name { get; set; }
@@ -39,6 +42,8 @@ namespace FinsMes
         public Form1()
         {
             InitializeComponent();
+
+            cmbCommType.SelectedIndex = 0;
 
             List<ItemSet> src = new List<ItemSet>();
             src.Add(new ItemSet(0x0101, "0101 変数読出"));
@@ -78,12 +83,16 @@ namespace FinsMes
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SelectedIndex = 1;
+            lblWriteData.Visible = false;
+            txtWriteData.Visible = false;
 
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            fins = new FinsMessage();
+
             cmbSrcIP.Text = Properties.Settings.Default.SrcIP;
             txtTargetIP.Text = Properties.Settings.Default.TargetIP;
             txtFinsSrcAdr.Text = Properties.Settings.Default.SrcFins;
@@ -236,6 +245,44 @@ namespace FinsMes
             }
 
             return bytes;
+        }
+
+
+        private void connect(bool value)
+        {
+            connected = value;
+
+            btnSend.Enabled = value;
+
+            if (value)
+            {
+                btnConnect.BackColor = Color.Yellow;
+            }
+            else
+            {
+                btnConnect.BackColor = SystemColors.Control;
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if(connected)
+            {
+                connect(false);
+                fins.Close();
+
+            }
+            else
+            {
+                bool useUDP = false;
+                if (cmbCmd.SelectedItem.ToString() == "TCP")
+                    useUDP = true;
+
+
+                fins.Connect(txtTargetIP.Text, useUDP);
+
+                connect(true);
+            }
         }
     }
 }
