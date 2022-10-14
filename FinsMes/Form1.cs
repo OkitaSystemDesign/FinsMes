@@ -16,7 +16,7 @@ namespace FinsMes
         private bool connected = false;
         private FinsMessage fins = null;
 
-        public class ItemSet
+        private class ItemSet
         {
             public string Name { get; set; }
             public int Value { get; set; }
@@ -28,7 +28,7 @@ namespace FinsMes
             }
         }
 
-        public class MemType
+        private class MemType
         {
             public string Name { get; set; }
             public int Value { get;set; }
@@ -43,14 +43,11 @@ namespace FinsMes
         {
             InitializeComponent();
 
-            cmbCommType.SelectedIndex = 0;
-
             List<ItemSet> src = new List<ItemSet>();
             src.Add(new ItemSet(0x0101, "0101 変数読出"));
             src.Add(new ItemSet(0x0102, "0102 変数書込"));
             src.Add(new ItemSet(0x0103, "0103 一括書込"));
             src.Add(new ItemSet(0x0104, "0104 複合読出"));
-            src.Add(new ItemSet(0x0105, "0105 メモリ転送"));
             src.Add(new ItemSet(0x0401, "0401 運転開始"));
             src.Add(new ItemSet(0x0402, "0402 運転停止"));
             src.Add(new ItemSet(0x0501, "0501 CPUユニット情報"));
@@ -74,7 +71,31 @@ namespace FinsMes
             dst.Add(new MemType(0xB3, "AR"));
             dst.Add(new MemType(0x89, "TIM"));
             dst.Add(new MemType(0x82, "DM"));
-            dst.Add(new MemType(0xA0, "EM"));
+            dst.Add(new MemType(0xA0, "E0"));
+            dst.Add(new MemType(0xA1, "E1"));
+            dst.Add(new MemType(0xA2, "E2"));
+            dst.Add(new MemType(0xA3, "E3"));
+            dst.Add(new MemType(0xA4, "E4"));
+            dst.Add(new MemType(0xA5, "E5"));
+            dst.Add(new MemType(0xA6, "E6"));
+            dst.Add(new MemType(0xA7, "E7"));
+            dst.Add(new MemType(0xA8, "E8"));
+            dst.Add(new MemType(0xA9, "E9"));
+            dst.Add(new MemType(0xAA, "EA"));
+            dst.Add(new MemType(0xAB, "EB"));
+            dst.Add(new MemType(0xAC, "EC"));
+            dst.Add(new MemType(0xAD, "ED"));
+            dst.Add(new MemType(0xAE, "EE"));
+            dst.Add(new MemType(0xAF, "EF"));
+            dst.Add(new MemType(0x60, "E10"));
+            dst.Add(new MemType(0x61, "E11"));
+            dst.Add(new MemType(0x62, "E12"));
+            dst.Add(new MemType(0x63, "E13"));
+            dst.Add(new MemType(0x64, "E14"));
+            dst.Add(new MemType(0x65, "E15"));
+            dst.Add(new MemType(0x66, "E16"));
+            dst.Add(new MemType(0x67, "E17"));
+            dst.Add(new MemType(0x68, "E18"));
             cmbMemType.DataSource = dst;
             cmbMemType.DisplayMember = "Name";
             cmbMemType.ValueMember = "Value";
@@ -86,12 +107,14 @@ namespace FinsMes
             lblWriteData.Visible = false;
             txtWriteData.Visible = false;
 
+            fins = new FinsMessage();
+
+            cmbCommType.SelectedIndex = 0;
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            fins = new FinsMessage();
 
             cmbSrcIP.Text = Properties.Settings.Default.SrcIP;
             txtTargetIP.Text = Properties.Settings.Default.TargetIP;
@@ -131,28 +154,162 @@ namespace FinsMes
 
         }
 
-        private void btnCreateSendmes_Click(object sender, EventArgs e)
+        private byte[] CreateFinsCmd()
         {
-            byte[] cmd;
-
+            byte[] finscmd = null;
             byte[] cmdcode = BitConverter.GetBytes((short)(int)cmbCmd.SelectedValue).Reverse().ToArray();
+            byte[] address = new byte[3];
+            byte[] memsize = new byte[2];
+            string[] data = null;
 
             switch (cmbCmd.SelectedValue)
             {
                 case 0x0101:
-                    cmd = new byte[7];
-                    Array.Copy(cmdcode, 0, cmd, 0, 2);
-                    cmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
-                    byte[] address =  AddressArray(txtMemAddress.Text);
-                    Array.Copy(address, 0, cmd, 2, 3);
-                    byte[] memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
-                    Array.Copy(memsize, 0, cmd, 5, memsize.Length);
+                    finscmd = new byte[8];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    finscmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
+                    address = AddressArray(txtMemAddress.Text);
+                    Array.Copy(address, 0, finscmd, 3, 3);
+                    memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
+                    Array.Copy(memsize, 0, finscmd, 6, memsize.Length);
+
+                    break;
+
+                case 0x0102:
+                case 0x0103:
+                    data = txtWriteData.Text.Split('-');
+
+                    finscmd = new byte[8 + data.Length];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    finscmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
+                    address = AddressArray(txtMemAddress.Text);
+                    Array.Copy(address, 0, finscmd, 3, 3);
+                    memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
+                    Array.Copy(memsize, 0, finscmd, 6, memsize.Length);
+
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        finscmd[8 + i] = Convert.ToByte(data[i], 16);
+                    }
+
+                    break;
+
+                case 0x0104:
+                    data = txtMultiRead.Text.Split('-');
+
+                    finscmd = new byte[2 + data.Length];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        finscmd[2 + i] = Convert.ToByte(data[i], 16);
+                    }
+
+                    break;
+
+                case 0x0401:
+                    finscmd = new byte[5];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    finscmd[2] = 0xFF;
+                    finscmd[3] = 0xFF;
+                    finscmd[4] = rdoMonitor.Checked ? (byte)0x02 : (byte)0x04;
+
+                    break;
+
+                case 0x0402:
+                    finscmd = new byte[4];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    finscmd[2] = 0xFF;
+                    finscmd[3] = 0xFF;
+
+                    break;
+
+                case 0x0501:
+                case 0x0601:
+                case 0x0701:
+                case 0x2103:
+                    finscmd = new byte[2];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+
+                    break;
+
+                case 0x0620:
+                    finscmd = new byte[3];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    finscmd[2] = rdoIni.Checked ? (byte)0x00 : (byte)0x01;
+
+                    break;
+
+                case 0x0702:
+                    finscmd = new byte[9];
+                    DateTime dt = DateTime.Now;
+
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    Console.WriteLine(dt.ToString("yy"));
+                    finscmd[2] = Convert.ToByte(dt.ToString("yy"), 16);
+                    finscmd[3] = Convert.ToByte(dt.ToString("MM"), 16);
+                    finscmd[4] = Convert.ToByte(dt.ToString("dd"), 16);
+                    finscmd[5] = Convert.ToByte(dt.ToString("HH"), 16);
+                    finscmd[6] = Convert.ToByte(dt.ToString("mm"), 16);
+                    finscmd[7] = Convert.ToByte(dt.ToString("ss"), 16);
+                    finscmd[8] = Convert.ToByte(dt.DayOfWeek);
+
+                    break;
+
+                case 0x2101:
+                    finscmd = new byte[4];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+                    string ErrCode = txtErrCode.Text.PadLeft(4, '0');
+
+                    finscmd[2] = Convert.ToByte(ErrCode.Substring(0, 2),16);
+                    finscmd[3] = Convert.ToByte(ErrCode.Substring(2, 2),16);
+                    break;
+
+                case 0x2102:
+                    finscmd = new byte[6];
+                    Array.Copy(cmdcode, 0, finscmd, 0, 2);
+
+                    byte[] StartRec = BitConverter.GetBytes(short.Parse(txtStartRec.Text)).Reverse().ToArray();
+                    Array.Copy(StartRec, 0, finscmd, 2, 2);
+                    byte[] RecSize = BitConverter.GetBytes(short.Parse(txtRecSize.Text)).Reverse().ToArray();
+                    Array.Copy(RecSize, 0, finscmd, 4, 2);
 
                     break;
 
                 default:
                     break;
             }
+
+            return finscmd;
+        }
+
+        private void btnCreateSendMes_Click(object sender, EventArgs e)
+        {
+            byte[] finscmd = CreateFinsCmd();
+            byte[] cmd = fins.CreateFinsFlame(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, finscmd);
+
+            /*
+            byte[] finsheader = fins.GetFinsHeader(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
+
+            byte[] cmd = null;
+            int pos = 0;
+            if (cmbCommType.SelectedItem.ToString() == "TCP")
+            {
+                byte[] finsTcpheader = fins.GetFinsTcpHeader(finsheader.Length + finscmd.Length);
+                cmd = new byte[finsTcpheader.Length + finsheader.Length + finscmd.Length];
+                Array.Copy(finsTcpheader, 0, cmd, 0, finsTcpheader.Length);
+                pos = finsTcpheader.Length;
+            }
+            else
+            {
+                cmd = new byte[finsheader.Length + finscmd.Length];
+            }
+
+            Array.Copy(finsheader, 0, cmd, pos, finsheader.Length);
+            pos += finsheader.Length;
+            Array.Copy(finscmd, 0, cmd, pos, finscmd.Length);
+            */
+            txtCmd.Text = BitConverter.ToString(cmd);
         }
 
         private void cmbCmd_SelectedIndexChanged(object sender, EventArgs e)
@@ -181,12 +338,8 @@ namespace FinsMes
                     tabControl1.SelectedIndex = 2;
                     break;
 
-                case 0x0105:
-                    tabControl1.SelectedIndex = 3;
-                    break;
-
                 case 0x0401:
-                    tabControl1.SelectedIndex = 4;
+                    tabControl1.SelectedIndex = 3;
                     break;
 
                 case 0x0402:
@@ -202,7 +355,7 @@ namespace FinsMes
                     break;
 
                 case 0x0620:
-                    tabControl1.SelectedIndex = 5;
+                    tabControl1.SelectedIndex = 4;
                     break;
 
                 case 0x0701:
@@ -210,15 +363,15 @@ namespace FinsMes
                     break;
 
                 case 0x0702:
-                    tabControl1.SelectedIndex = 6;
+                    tabControl1.SelectedIndex = 5;
                     break;
 
                 case 0x2101:
-                    tabControl1.SelectedIndex = 7;
+                    tabControl1.SelectedIndex = 6;
                     break;
 
                 case 0x2102:
-                    tabControl1.SelectedIndex = 8;
+                    tabControl1.SelectedIndex = 7;
                     break;
 
                 case 0x2103:
@@ -252,6 +405,12 @@ namespace FinsMes
         {
             connected = value;
 
+            cmbCommType.Enabled = !value;
+            cmbSrcIP.Enabled = !value;
+            txtTargetIP.Enabled = !value;
+            txtFinsSrcAdr.Enabled = !value;
+            txtFinsTargetAdr.Enabled   = !value;
+
             btnSend.Enabled = value;
 
             if (value)
@@ -274,14 +433,60 @@ namespace FinsMes
             }
             else
             {
-                bool useUDP = false;
-                if (cmbCmd.SelectedItem.ToString() == "TCP")
-                    useUDP = true;
+                fins.Connect(txtTargetIP.Text);
 
-
-                fins.Connect(txtTargetIP.Text, useUDP);
+                txtLineMonitor.AppendText(fins.Message);
 
                 connect(true);
+            }
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string[] str = txtCmd.Text.Split('-');
+                byte[] senddata = new byte[str.Length];
+                for (int i = 0; i < str.Length; i++)
+                {
+                    senddata[i] = Convert.ToByte(str[i], 16);
+                }
+                Console.WriteLine(BitConverter.ToString(senddata));
+
+                //byte ServiceCode = senddata[0];
+
+                txtRes.AppendText("-->> Send\r\n" + Dump.Execute(senddata) + "\r\n\r\n");
+
+                byte[] res = fins.SendCommand(senddata);
+
+                txtRes.AppendText("<<-- Recive\r\n" + Dump.Execute(res) + "\r\n\r\n");
+                Console.WriteLine(BitConverter.ToString(senddata));
+
+                //txtMes.AppendText(BitConverter.ToString(res) + "\r\n");
+                txtLineMonitor.AppendText(fins.Message);
+
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                MessageBox.Show(ex.Message, "Socket", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                connect(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                connect(false);
+            }
+        }
+
+        private void cmbCommType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbCommType.SelectedIndex == 0)
+            {
+                fins.useTcp = false;
+            }
+            else
+            {
+                fins.useTcp = true;
             }
         }
     }
