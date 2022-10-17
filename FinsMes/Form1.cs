@@ -160,7 +160,6 @@ namespace FinsMes
             byte[] cmdcode = BitConverter.GetBytes((short)(int)cmbCmd.SelectedValue).Reverse().ToArray();
             byte[] address = new byte[3];
             byte[] memsize = new byte[2];
-            string[] data = null;
 
             switch (cmbCmd.SelectedValue)
             {
@@ -177,9 +176,9 @@ namespace FinsMes
 
                 case 0x0102:
                 case 0x0103:
-                    data = txtWriteData.Text.Split('-');
+                    string[] subs = txtWriteData.Text.Split(',');
+                    finscmd = new byte[8 + subs.Length * 2];
 
-                    finscmd = new byte[8 + data.Length];
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
                     finscmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
                     address = AddressArray(txtMemAddress.Text);
@@ -187,24 +186,30 @@ namespace FinsMes
                     memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
                     Array.Copy(memsize, 0, finscmd, 6, memsize.Length);
 
-                    for (int i = 0; i < data.Length; i++)
+                    int offset = 0;
+                    foreach(string sub in subs)
                     {
-                        finscmd[8 + i] = Convert.ToByte(data[i], 16);
+                        byte[] wdata = BitConverter.GetBytes(Convert.ToInt16(sub.Trim(' '),16)).Reverse().ToArray();
+                        Array.Copy(wdata, 0, finscmd, 8 + offset , 2);
+                        offset += 2;
                     }
 
                     break;
 
                 case 0x0104:
-                    data = txtMultiRead.Text.Split('-');
+                    subs = txtMultiRead.Text.Split(',');
+                    finscmd = new byte[2 + subs.Length * 3];
 
-                    finscmd = new byte[2 + data.Length];
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
 
-                    for (int i = 0; i < data.Length; i++)
+                    offset = 0;
+                    foreach(string sub in subs)
                     {
-                        finscmd[2 + i] = Convert.ToByte(data[i], 16);
+                        byte[] adrary = fins.MemAddress(sub.Trim(' '));
+                        Array.Copy(adrary, 0, finscmd, 2 + offset, 3);
+                        offset += 3;
                     }
-
+                    
                     break;
 
                 case 0x0401:
@@ -286,7 +291,7 @@ namespace FinsMes
         private void btnCreateSendMes_Click(object sender, EventArgs e)
         {
             byte[] finscmd = CreateFinsCmd();
-            byte[] cmd = fins.CreateFinsFlame(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, finscmd);
+            byte[] cmd = fins.CreateFinsFrame(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, finscmd);
 
             /*
             byte[] finsheader = fins.GetFinsHeader(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
@@ -332,6 +337,11 @@ namespace FinsMes
                     tabControl1.SelectedIndex = 1;
                     lblWriteData.Visible = true;
                     txtWriteData.Visible = true;
+
+                    string[] subs = txtWriteData.Text.Split(',');
+                    if (subs.Length > 1)
+                        txtWriteData.Text = subs[0];
+
                     break;
 
                 case 0x0104:
@@ -425,19 +435,26 @@ namespace FinsMes
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(connected)
+            try
             {
-                connect(false);
-                fins.Close();
+                if (connected)
+                {
+                    connect(false);
+                    fins.Close();
 
+                }
+                else
+                {
+                    fins.Connect(txtTargetIP.Text);
+
+                    txtLineMonitor.AppendText(fins.Message);
+
+                    connect(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                fins.Connect(txtTargetIP.Text);
-
-                txtLineMonitor.AppendText(fins.Message);
-
-                connect(true);
+                MessageBox.Show(ex.Message, "Connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

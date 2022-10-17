@@ -35,65 +35,63 @@
             this.btnConnect = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.txtRes = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtCmd = new System.Windows.Forms.TextBox();
             this.btnSend = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabNone = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.txtWriteData = new System.Windows.Forms.TextBox();
+            this.txtSize = new System.Windows.Forms.TextBox();
+            this.txtMemAddress = new System.Windows.Forms.TextBox();
+            this.lblWriteData = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cmbMemType = new System.Windows.Forms.ComboBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtMultiRead = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rdoMonitor = new System.Windows.Forms.RadioButton();
+            this.rdoRun = new System.Windows.Forms.RadioButton();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rdoCycleTime = new System.Windows.Forms.RadioButton();
+            this.rdoIni = new System.Windows.Forms.RadioButton();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.txtErrCode = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.txtRecSize = new System.Windows.Forms.TextBox();
+            this.txtStartRec = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.btnCreateSendMes = new System.Windows.Forms.Button();
             this.cmbCmd = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
             this.txtLineMonitor = new System.Windows.Forms.TextBox();
             this.txtFinsSrcAdr = new System.Windows.Forms.TextBox();
             this.txtFinsTargetAdr = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbCommType = new System.Windows.Forms.ComboBox();
-            this.tabPage9 = new System.Windows.Forms.TabPage();
-            this.label17 = new System.Windows.Forms.Label();
-            this.txtStartRec = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.txtRecSize = new System.Windows.Forms.TextBox();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtErrCode = new System.Windows.Forms.TextBox();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.label19 = new System.Windows.Forms.Label();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.rdoIni = new System.Windows.Forms.RadioButton();
-            this.rdoCycleTime = new System.Windows.Forms.RadioButton();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rdoRun = new System.Windows.Forms.RadioButton();
-            this.rdoMonitor = new System.Windows.Forms.RadioButton();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtMultiRead = new System.Windows.Forms.TextBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.cmbMemType = new System.Windows.Forms.ComboBox();
-            this.txtMemAddress = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtSize = new System.Windows.Forms.TextBox();
-            this.lblWriteData = new System.Windows.Forms.Label();
-            this.txtWriteData = new System.Windows.Forms.TextBox();
-            this.tabNone = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabPage9.SuspendLayout();
-            this.tabPage8.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            this.tabPage9.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -146,14 +144,13 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 76);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 64);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.txtRes);
-            this.splitContainer1.Panel1.Controls.Add(this.label14);
             this.splitContainer1.Panel1.Controls.Add(this.label8);
             this.splitContainer1.Panel1.Controls.Add(this.txtCmd);
             this.splitContainer1.Panel1.Controls.Add(this.btnSend);
@@ -164,10 +161,9 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.label16);
             this.splitContainer1.Panel2.Controls.Add(this.txtLineMonitor);
-            this.splitContainer1.Size = new System.Drawing.Size(636, 523);
-            this.splitContainer1.SplitterDistance = 407;
+            this.splitContainer1.Size = new System.Drawing.Size(636, 535);
+            this.splitContainer1.SplitterDistance = 416;
             this.splitContainer1.TabIndex = 5;
             // 
             // txtRes
@@ -176,21 +172,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRes.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtRes.Location = new System.Drawing.Point(9, 211);
+            this.txtRes.Location = new System.Drawing.Point(9, 199);
             this.txtRes.Multiline = true;
             this.txtRes.Name = "txtRes";
             this.txtRes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRes.Size = new System.Drawing.Size(616, 193);
+            this.txtRes.Size = new System.Drawing.Size(616, 214);
             this.txtRes.TabIndex = 33;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(7, 196);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(101, 12);
-            this.label14.TabIndex = 34;
-            this.label14.Text = "送受信データDUMP";
             // 
             // label8
             // 
@@ -224,6 +211,315 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabNone);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage8);
+            this.tabControl1.Controls.Add(this.tabPage9);
+            this.tabControl1.Location = new System.Drawing.Point(5, 29);
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(624, 76);
+            this.tabControl1.TabIndex = 29;
+            // 
+            // tabNone
+            // 
+            this.tabNone.Location = new System.Drawing.Point(4, 22);
+            this.tabNone.Name = "tabNone";
+            this.tabNone.Padding = new System.Windows.Forms.Padding(3);
+            this.tabNone.Size = new System.Drawing.Size(616, 50);
+            this.tabNone.TabIndex = 4;
+            this.tabNone.UseVisualStyleBackColor = true;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.CausesValidation = false;
+            this.tabPage1.Controls.Add(this.txtWriteData);
+            this.tabPage1.Controls.Add(this.txtSize);
+            this.tabPage1.Controls.Add(this.txtMemAddress);
+            this.tabPage1.Controls.Add(this.lblWriteData);
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.cmbMemType);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(616, 50);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // txtWriteData
+            // 
+            this.txtWriteData.Location = new System.Drawing.Point(66, 36);
+            this.txtWriteData.Name = "txtWriteData";
+            this.txtWriteData.Size = new System.Drawing.Size(394, 19);
+            this.txtWriteData.TabIndex = 4;
+            this.txtWriteData.Text = "1234,12AB";
+            // 
+            // txtSize
+            // 
+            this.txtSize.Location = new System.Drawing.Point(285, 6);
+            this.txtSize.Name = "txtSize";
+            this.txtSize.Size = new System.Drawing.Size(58, 19);
+            this.txtSize.TabIndex = 2;
+            this.txtSize.Text = "2";
+            // 
+            // txtMemAddress
+            // 
+            this.txtMemAddress.Location = new System.Drawing.Point(110, 6);
+            this.txtMemAddress.Name = "txtMemAddress";
+            this.txtMemAddress.Size = new System.Drawing.Size(100, 19);
+            this.txtMemAddress.TabIndex = 1;
+            this.txtMemAddress.Text = "0";
+            // 
+            // lblWriteData
+            // 
+            this.lblWriteData.AutoSize = true;
+            this.lblWriteData.Location = new System.Drawing.Point(3, 39);
+            this.lblWriteData.Name = "lblWriteData";
+            this.lblWriteData.Size = new System.Drawing.Size(57, 12);
+            this.lblWriteData.TabIndex = 5;
+            this.lblWriteData.Text = "書込データ";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(238, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "要素数";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(41, 12);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "アドレス";
+            // 
+            // cmbMemType
+            // 
+            this.cmbMemType.FormattingEnabled = true;
+            this.cmbMemType.Location = new System.Drawing.Point(50, 6);
+            this.cmbMemType.Name = "cmbMemType";
+            this.cmbMemType.Size = new System.Drawing.Size(54, 20);
+            this.cmbMemType.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtMultiRead);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(616, 50);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // txtMultiRead
+            // 
+            this.txtMultiRead.Location = new System.Drawing.Point(93, 6);
+            this.txtMultiRead.Name = "txtMultiRead";
+            this.txtMultiRead.Size = new System.Drawing.Size(377, 19);
+            this.txtMultiRead.TabIndex = 0;
+            this.txtMultiRead.Text = "D0,E1_0,W10";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(81, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "複合読出データ";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.groupBox1);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(616, 50);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rdoMonitor);
+            this.groupBox1.Controls.Add(this.rdoRun);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(437, 38);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            // 
+            // rdoMonitor
+            // 
+            this.rdoMonitor.AutoSize = true;
+            this.rdoMonitor.Location = new System.Drawing.Point(11, 16);
+            this.rdoMonitor.Name = "rdoMonitor";
+            this.rdoMonitor.Size = new System.Drawing.Size(49, 16);
+            this.rdoMonitor.TabIndex = 0;
+            this.rdoMonitor.TabStop = true;
+            this.rdoMonitor.Text = "モニタ";
+            this.rdoMonitor.UseVisualStyleBackColor = true;
+            // 
+            // rdoRun
+            // 
+            this.rdoRun.AutoSize = true;
+            this.rdoRun.Checked = true;
+            this.rdoRun.Location = new System.Drawing.Point(118, 16);
+            this.rdoRun.Name = "rdoRun";
+            this.rdoRun.Size = new System.Drawing.Size(47, 16);
+            this.rdoRun.TabIndex = 1;
+            this.rdoRun.TabStop = true;
+            this.rdoRun.Text = "運転";
+            this.rdoRun.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.groupBox2);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(616, 50);
+            this.tabPage5.TabIndex = 5;
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rdoCycleTime);
+            this.groupBox2.Controls.Add(this.rdoIni);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(328, 35);
+            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabStop = false;
+            // 
+            // rdoCycleTime
+            // 
+            this.rdoCycleTime.AutoSize = true;
+            this.rdoCycleTime.Checked = true;
+            this.rdoCycleTime.Location = new System.Drawing.Point(116, 13);
+            this.rdoCycleTime.Name = "rdoCycleTime";
+            this.rdoCycleTime.Size = new System.Drawing.Size(56, 16);
+            this.rdoCycleTime.TabIndex = 1;
+            this.rdoCycleTime.TabStop = true;
+            this.rdoCycleTime.Text = "読出し";
+            this.rdoCycleTime.UseVisualStyleBackColor = true;
+            // 
+            // rdoIni
+            // 
+            this.rdoIni.AutoSize = true;
+            this.rdoIni.Location = new System.Drawing.Point(12, 13);
+            this.rdoIni.Name = "rdoIni";
+            this.rdoIni.Size = new System.Drawing.Size(86, 16);
+            this.rdoIni.TabIndex = 0;
+            this.rdoIni.Text = "イニシャライズ";
+            this.rdoIni.UseVisualStyleBackColor = true;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.label19);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(616, 50);
+            this.tabPage6.TabIndex = 6;
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(33, 15);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(150, 12);
+            this.label19.TabIndex = 0;
+            this.label19.Text = "PCの現在時刻を書き込みます";
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.txtErrCode);
+            this.tabPage8.Controls.Add(this.label6);
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(616, 50);
+            this.tabPage8.TabIndex = 8;
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // txtErrCode
+            // 
+            this.txtErrCode.Location = new System.Drawing.Point(68, 7);
+            this.txtErrCode.Name = "txtErrCode";
+            this.txtErrCode.Size = new System.Drawing.Size(43, 19);
+            this.txtErrCode.TabIndex = 1;
+            this.txtErrCode.Text = "FFFF";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(56, 12);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "故障コード";
+            // 
+            // tabPage9
+            // 
+            this.tabPage9.Controls.Add(this.txtRecSize);
+            this.tabPage9.Controls.Add(this.txtStartRec);
+            this.tabPage9.Controls.Add(this.label18);
+            this.tabPage9.Controls.Add(this.label17);
+            this.tabPage9.Location = new System.Drawing.Point(4, 22);
+            this.tabPage9.Name = "tabPage9";
+            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage9.Size = new System.Drawing.Size(616, 50);
+            this.tabPage9.TabIndex = 9;
+            this.tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // txtRecSize
+            // 
+            this.txtRecSize.Location = new System.Drawing.Point(216, 6);
+            this.txtRecSize.Name = "txtRecSize";
+            this.txtRecSize.Size = new System.Drawing.Size(44, 19);
+            this.txtRecSize.TabIndex = 3;
+            this.txtRecSize.Text = "20";
+            // 
+            // txtStartRec
+            // 
+            this.txtStartRec.Location = new System.Drawing.Point(91, 6);
+            this.txtStartRec.Name = "txtStartRec";
+            this.txtStartRec.Size = new System.Drawing.Size(41, 19);
+            this.txtStartRec.TabIndex = 1;
+            this.txtStartRec.Text = "0";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(157, 9);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(53, 12);
+            this.label18.TabIndex = 2;
+            this.label18.Text = "レコード数";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 9);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(79, 12);
+            this.label17.TabIndex = 0;
+            this.label17.Text = "開始レコードNo";
+            // 
             // btnCreateSendMes
             // 
             this.btnCreateSendMes.Location = new System.Drawing.Point(199, 111);
@@ -252,26 +548,17 @@
             this.label15.TabIndex = 21;
             this.label15.Text = "コマンド";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 10);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(68, 12);
-            this.label16.TabIndex = 35;
-            this.label16.Text = "メッセージログ";
-            // 
             // txtLineMonitor
             // 
             this.txtLineMonitor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLineMonitor.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtLineMonitor.Location = new System.Drawing.Point(9, 25);
+            this.txtLineMonitor.Location = new System.Drawing.Point(9, 3);
             this.txtLineMonitor.Multiline = true;
             this.txtLineMonitor.Name = "txtLineMonitor";
             this.txtLineMonitor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtLineMonitor.Size = new System.Drawing.Size(620, 84);
+            this.txtLineMonitor.Size = new System.Drawing.Size(620, 109);
             this.txtLineMonitor.TabIndex = 20;
             this.txtLineMonitor.WordWrap = false;
             // 
@@ -319,315 +606,6 @@
             this.cmbCommType.TabIndex = 10;
             this.cmbCommType.SelectedIndexChanged += new System.EventHandler(this.cmbCommType_SelectedIndexChanged);
             // 
-            // tabPage9
-            // 
-            this.tabPage9.Controls.Add(this.txtRecSize);
-            this.tabPage9.Controls.Add(this.txtStartRec);
-            this.tabPage9.Controls.Add(this.label18);
-            this.tabPage9.Controls.Add(this.label17);
-            this.tabPage9.Location = new System.Drawing.Point(4, 22);
-            this.tabPage9.Name = "tabPage9";
-            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(616, 50);
-            this.tabPage9.TabIndex = 9;
-            this.tabPage9.UseVisualStyleBackColor = true;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 9);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(79, 12);
-            this.label17.TabIndex = 0;
-            this.label17.Text = "開始レコードNo";
-            // 
-            // txtStartRec
-            // 
-            this.txtStartRec.Location = new System.Drawing.Point(91, 6);
-            this.txtStartRec.Name = "txtStartRec";
-            this.txtStartRec.Size = new System.Drawing.Size(41, 19);
-            this.txtStartRec.TabIndex = 1;
-            this.txtStartRec.Text = "0";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(157, 9);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(53, 12);
-            this.label18.TabIndex = 2;
-            this.label18.Text = "レコード数";
-            // 
-            // txtRecSize
-            // 
-            this.txtRecSize.Location = new System.Drawing.Point(216, 6);
-            this.txtRecSize.Name = "txtRecSize";
-            this.txtRecSize.Size = new System.Drawing.Size(44, 19);
-            this.txtRecSize.TabIndex = 3;
-            this.txtRecSize.Text = "20";
-            // 
-            // tabPage8
-            // 
-            this.tabPage8.Controls.Add(this.txtErrCode);
-            this.tabPage8.Controls.Add(this.label6);
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(616, 50);
-            this.tabPage8.TabIndex = 8;
-            this.tabPage8.UseVisualStyleBackColor = true;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(56, 12);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "故障コード";
-            // 
-            // txtErrCode
-            // 
-            this.txtErrCode.Location = new System.Drawing.Point(68, 7);
-            this.txtErrCode.Name = "txtErrCode";
-            this.txtErrCode.Size = new System.Drawing.Size(43, 19);
-            this.txtErrCode.TabIndex = 1;
-            this.txtErrCode.Text = "FFFF";
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.label19);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(616, 50);
-            this.tabPage6.TabIndex = 6;
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(33, 15);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(150, 12);
-            this.label19.TabIndex = 0;
-            this.label19.Text = "PCの現在時刻を書き込みます";
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.groupBox2);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(616, 50);
-            this.tabPage5.TabIndex = 5;
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.rdoCycleTime);
-            this.groupBox2.Controls.Add(this.rdoIni);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(328, 35);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            // 
-            // rdoIni
-            // 
-            this.rdoIni.AutoSize = true;
-            this.rdoIni.Location = new System.Drawing.Point(12, 13);
-            this.rdoIni.Name = "rdoIni";
-            this.rdoIni.Size = new System.Drawing.Size(86, 16);
-            this.rdoIni.TabIndex = 0;
-            this.rdoIni.Text = "イニシャライズ";
-            this.rdoIni.UseVisualStyleBackColor = true;
-            // 
-            // rdoCycleTime
-            // 
-            this.rdoCycleTime.AutoSize = true;
-            this.rdoCycleTime.Checked = true;
-            this.rdoCycleTime.Location = new System.Drawing.Point(116, 13);
-            this.rdoCycleTime.Name = "rdoCycleTime";
-            this.rdoCycleTime.Size = new System.Drawing.Size(56, 16);
-            this.rdoCycleTime.TabIndex = 1;
-            this.rdoCycleTime.TabStop = true;
-            this.rdoCycleTime.Text = "読出し";
-            this.rdoCycleTime.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.groupBox1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(616, 50);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.rdoMonitor);
-            this.groupBox1.Controls.Add(this.rdoRun);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(437, 38);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            // 
-            // rdoRun
-            // 
-            this.rdoRun.AutoSize = true;
-            this.rdoRun.Checked = true;
-            this.rdoRun.Location = new System.Drawing.Point(118, 16);
-            this.rdoRun.Name = "rdoRun";
-            this.rdoRun.Size = new System.Drawing.Size(47, 16);
-            this.rdoRun.TabIndex = 1;
-            this.rdoRun.TabStop = true;
-            this.rdoRun.Text = "運転";
-            this.rdoRun.UseVisualStyleBackColor = true;
-            // 
-            // rdoMonitor
-            // 
-            this.rdoMonitor.AutoSize = true;
-            this.rdoMonitor.Location = new System.Drawing.Point(11, 16);
-            this.rdoMonitor.Name = "rdoMonitor";
-            this.rdoMonitor.Size = new System.Drawing.Size(49, 16);
-            this.rdoMonitor.TabIndex = 0;
-            this.rdoMonitor.TabStop = true;
-            this.rdoMonitor.Text = "モニタ";
-            this.rdoMonitor.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.txtMultiRead);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(616, 50);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(81, 12);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "複合読出データ";
-            // 
-            // txtMultiRead
-            // 
-            this.txtMultiRead.Location = new System.Drawing.Point(93, 6);
-            this.txtMultiRead.Name = "txtMultiRead";
-            this.txtMultiRead.Size = new System.Drawing.Size(377, 19);
-            this.txtMultiRead.TabIndex = 0;
-            this.txtMultiRead.Text = "82-00-00-00-82-00-0A-00";
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.CausesValidation = false;
-            this.tabPage1.Controls.Add(this.txtWriteData);
-            this.tabPage1.Controls.Add(this.txtSize);
-            this.tabPage1.Controls.Add(this.txtMemAddress);
-            this.tabPage1.Controls.Add(this.lblWriteData);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.cmbMemType);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(616, 50);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // cmbMemType
-            // 
-            this.cmbMemType.FormattingEnabled = true;
-            this.cmbMemType.Location = new System.Drawing.Point(50, 6);
-            this.cmbMemType.Name = "cmbMemType";
-            this.cmbMemType.Size = new System.Drawing.Size(54, 20);
-            this.cmbMemType.TabIndex = 0;
-            // 
-            // txtMemAddress
-            // 
-            this.txtMemAddress.Location = new System.Drawing.Point(110, 6);
-            this.txtMemAddress.Name = "txtMemAddress";
-            this.txtMemAddress.Size = new System.Drawing.Size(100, 19);
-            this.txtMemAddress.TabIndex = 1;
-            this.txtMemAddress.Text = "0";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 9);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(41, 12);
-            this.label9.TabIndex = 4;
-            this.label9.Text = "アドレス";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(238, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 12);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "要素数";
-            // 
-            // txtSize
-            // 
-            this.txtSize.Location = new System.Drawing.Point(285, 6);
-            this.txtSize.Name = "txtSize";
-            this.txtSize.Size = new System.Drawing.Size(58, 19);
-            this.txtSize.TabIndex = 2;
-            this.txtSize.Text = "1";
-            // 
-            // lblWriteData
-            // 
-            this.lblWriteData.AutoSize = true;
-            this.lblWriteData.Location = new System.Drawing.Point(3, 39);
-            this.lblWriteData.Name = "lblWriteData";
-            this.lblWriteData.Size = new System.Drawing.Size(57, 12);
-            this.lblWriteData.TabIndex = 5;
-            this.lblWriteData.Text = "書込データ";
-            // 
-            // txtWriteData
-            // 
-            this.txtWriteData.Location = new System.Drawing.Point(66, 36);
-            this.txtWriteData.Name = "txtWriteData";
-            this.txtWriteData.Size = new System.Drawing.Size(394, 19);
-            this.txtWriteData.TabIndex = 4;
-            this.txtWriteData.Text = "12-34";
-            // 
-            // tabNone
-            // 
-            this.tabNone.Location = new System.Drawing.Point(4, 22);
-            this.tabNone.Name = "tabNone";
-            this.tabNone.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNone.Size = new System.Drawing.Size(616, 50);
-            this.tabNone.TabIndex = 4;
-            this.tabNone.UseVisualStyleBackColor = true;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabNone);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage8);
-            this.tabControl1.Controls.Add(this.tabPage9);
-            this.tabControl1.Location = new System.Drawing.Point(5, 29);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(624, 76);
-            this.tabControl1.TabIndex = 29;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -654,23 +632,23 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tabPage9.ResumeLayout(false);
-            this.tabPage9.PerformLayout();
-            this.tabPage8.ResumeLayout(false);
-            this.tabPage8.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
+            this.tabPage9.ResumeLayout(false);
+            this.tabPage9.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -695,8 +673,6 @@
         private System.Windows.Forms.TextBox txtCmd;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.TextBox txtRes;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox txtLineMonitor;
         private System.Windows.Forms.ComboBox cmbCommType;
         private System.Windows.Forms.TabControl tabControl1;

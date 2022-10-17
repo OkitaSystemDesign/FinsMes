@@ -211,7 +211,7 @@ namespace FinsMes
 
         }
 
-        public byte[] CreateFinsFlame(string ServerNode, string ClientNode, byte[] command)
+        public byte[] CreateFinsFrame(string ServerNode, string ClientNode, byte[] command)
         {
             byte[] finsheader = GetFinsHeader(ServerNode, ClientNode);
 
@@ -309,6 +309,56 @@ namespace FinsMes
             }
 
             return res;
+        }
+
+        public byte[] MemAddress(string memstring)
+        {
+            string memtype = memstring.Substring(0, 1);
+            string memadr = null;
+            byte[] adr = new byte[3];
+
+            switch (memtype)
+            {
+                case "D":
+                    adr[0] = 0x82;
+                    memadr = memstring.Substring(1);
+                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    break;
+
+                case "E":
+                    string[] strs = memstring.Split('_');
+                    int bank = Convert.ToInt32(strs[0].Substring(1), 16);
+                    if (bank < 16)
+                        adr[0] = (byte)(0xA0 + Convert.ToByte(bank));
+                    else
+                        adr[0] = (byte)(0x60 + Convert.ToByte(bank - 16));
+
+                    Array.Copy(BitConverter.GetBytes(short.Parse(strs[1])).Reverse().ToArray(), 0, adr, 1, 2);
+                    break;
+
+                case "W":
+                    adr[0] = 0xB1;
+                    memadr = memstring.Substring(1);
+                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    break;
+
+                case "H":
+                    adr[0] = 0xB2;
+                    memadr = memstring.Substring(1);
+                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    break;
+
+                default:
+                    int cioadr;
+                    if (int.TryParse(memstring, out cioadr))
+                    {
+                        adr[0] = 0xB0;
+                        Array.Copy(BitConverter.GetBytes((short)cioadr).Reverse().ToArray(), 0, adr, 1, 2);
+                    }
+                    break;
+            }
+
+            return adr;
         }
 
     }
