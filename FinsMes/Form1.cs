@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace FinsMes
     {
         private bool connected = false;
         private FinsMessage fins = null;
+        int DumpColMax = 16;
 
         private class ItemSet
         {
@@ -198,16 +200,16 @@ namespace FinsMes
 
                 case 0x0104:
                     subs = txtMultiRead.Text.Split(',');
-                    finscmd = new byte[2 + subs.Length * 3];
+                    finscmd = new byte[2 + subs.Length * 4];
 
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
 
                     offset = 0;
                     foreach(string sub in subs)
                     {
-                        byte[] adrary = fins.MemAddress(sub.Trim(' '));
-                        Array.Copy(adrary, 0, finscmd, 2 + offset, 3);
-                        offset += 3;
+                        byte[] adrary = fins.MemOffset(sub.Trim(' '), 0);
+                        Array.Copy(adrary, 0, finscmd, 2 + offset, 4);
+                        offset += 4;
                     }
                     
                     break;
@@ -250,7 +252,6 @@ namespace FinsMes
                     DateTime dt = DateTime.Now;
 
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
-                    Console.WriteLine(dt.ToString("yy"));
                     finscmd[2] = Convert.ToByte(dt.ToString("yy"), 16);
                     finscmd[3] = Convert.ToByte(dt.ToString("MM"), 16);
                     finscmd[4] = Convert.ToByte(dt.ToString("dd"), 16);
@@ -258,7 +259,7 @@ namespace FinsMes
                     finscmd[6] = Convert.ToByte(dt.ToString("mm"), 16);
                     finscmd[7] = Convert.ToByte(dt.ToString("ss"), 16);
                     finscmd[8] = Convert.ToByte(dt.DayOfWeek);
-
+                    
                     break;
 
                 case 0x2101:
@@ -291,7 +292,7 @@ namespace FinsMes
         private void btnCreateSendMes_Click(object sender, EventArgs e)
         {
             byte[] finscmd = CreateFinsCmd();
-            byte[] cmd = fins.CreateFinsFrame(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, finscmd);
+            byte[] cmd = fins.CreateFinsFrame(finscmd);
 
             /*
             byte[] finsheader = fins.GetFinsHeader(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
@@ -445,7 +446,13 @@ namespace FinsMes
                 }
                 else
                 {
-                    fins.Connect(txtTargetIP.Text);
+                    bool TcpConnect;
+                    if (cmbCommType.SelectedIndex == 0)
+                        TcpConnect = false;
+                    else
+                        TcpConnect = true;
+
+                    fins.Connect(txtTargetIP.Text, txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, TcpConnect);
 
                     txtLineMonitor.AppendText(fins.Message);
 
@@ -470,16 +477,14 @@ namespace FinsMes
                 }
                 Console.WriteLine(BitConverter.ToString(senddata));
 
-                //byte ServiceCode = senddata[0];
-
-                txtRes.AppendText("-->> Send\r\n" + Dump.Execute(senddata) + "\r\n\r\n");
+                DumpColMax = int.Parse(txtDumpColMax.Text);
+                txtRes.AppendText("-->> Send\r\n" + Dump.Execute(senddata, DumpColMax) + "\r\n\r\n");
 
                 byte[] res = fins.SendCommand(senddata);
 
-                txtRes.AppendText("<<-- Recive\r\n" + Dump.Execute(res) + "\r\n\r\n");
+                txtRes.AppendText("<<-- Recive\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
                 Console.WriteLine(BitConverter.ToString(senddata));
 
-                //txtMes.AppendText(BitConverter.ToString(res) + "\r\n");
                 txtLineMonitor.AppendText(fins.Message);
 
             }
@@ -495,16 +500,89 @@ namespace FinsMes
             }
         }
 
-        private void cmbCommType_SelectedIndexChanged(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            if (cmbCommType.SelectedIndex == 0)
+            DumpColMax = int.Parse(txtDumpColMax.Text);
+
+            // Read 0101
+            byte[] res = fins.read("D0", 1000);
+            txtRes.AppendText("<Read Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // Write 0102
+            byte[] writedata = new byte[2000];
+            for(int cnt = 0; cnt<1000; cnt++)
             {
-                fins.useTcp = false;
+                byte[] data = BitConverter.GetBytes((short)cnt).Reverse().ToArray();
+                Array.Copy(data, 0, writedata, cnt * 2, 2);
             }
-            else
-            {
-                fins.useTcp = true;
-            }
+            fins.write("D1000", writedata);
+            txtRes.AppendText("<Write Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // Fill 0103
+            byte[] filldata = BitConverter.GetBytes((short)100).Reverse().ToArray();
+            fins.fill("D2000", 100, filldata);
+            txtRes.AppendText("<Fill Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // MultiRead 0x0104
+            res = fins.MultiRead("D0,D10,D50");
+            txtRes.AppendText("<MultiRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ReadUnitData 0x0501
+            res =fins.ReadUnitData();
+            txtRes.AppendText("<ReadUnitData Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ReadUnitStatus 0x0601
+            res = fins.ReadUnitStatus();
+            txtRes.AppendText("<ReadUnitStatus Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ReadCycleTime 0x0620
+            res = fins.ReadUnitStatus();
+            txtRes.AppendText("<ReadCycleTime Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // Clock 0x0701
+            res = fins.Clock();
+            txtRes.AppendText("<Clock Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // SetClock 0x0702
+            fins.SetClock();
+            txtRes.AppendText("<SetClock Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // stop 0x0402
+            fins.stop();
+            txtRes.AppendText("<stop Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ErrorClear 0x2101
+            fins.ErrorClear();
+            txtRes.AppendText("<ErrorClear Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ErrorLogRead 0x2102
+            res = fins.ErrorLogRead();
+            txtRes.AppendText("<ErrorLogRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // ErrorLogClear 0x2103
+            fins.ErrorLogClear();
+            txtRes.AppendText("<ErrorLogClear Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
+            // run 0x0401
+            fins.run(0x02);
+            txtRes.AppendText("<run Command>\r\n" + "\r\n\r\n");
+            txtLineMonitor.AppendText(fins.Message);
+
         }
+
+
     }
 }

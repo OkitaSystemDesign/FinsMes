@@ -6,7 +6,7 @@ namespace FinsMes
 {
     class Dump
     {
-        public static string Execute(byte[] byteArray)
+        public static string Execute(byte[] byteArray, int ColMax)
         {
             if (byteArray == null)
                 return null;
@@ -16,7 +16,7 @@ namespace FinsMes
             string hex;
             int pos = 0;
             int col = 0;
-            int colMax = 10;    // 1行に表示したいバイト数
+            //int colMax = 10;    // 1行に表示したいバイト数
 
             for (int i = 0; i < byteArray.Length; i++)
             {
@@ -50,7 +50,7 @@ namespace FinsMes
                     sbLine.Append(".");
                 }
 
-                if (col == colMax)
+                if (col == ColMax)
                 {
                     // 1行に表示したいバイト数に達したら
                     sbLine.Append(Environment.NewLine);
@@ -61,7 +61,7 @@ namespace FinsMes
 
             if (col != 0)
             {
-                while (pos < colMax * 3)
+                while (pos < ColMax * 3)
                 {
                     sbLine.Insert(pos, " ");
                     pos++;

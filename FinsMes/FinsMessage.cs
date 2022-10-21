@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Serialization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace FinsMes
 {
@@ -17,8 +23,8 @@ namespace FinsMes
         private Int32 TargetPort = 9600;
         static byte sid = 0;
 
-        private byte ClientNodeNo = 0;
-        private byte ServerNodeNo = 0;
+        private byte[] ClientNodeNo = new byte[] { 0, 0, 0 };
+        private byte[] ServerNodeNo = new byte[] { 0, 0, 0 };
 
         public bool useTcp = false;
 
@@ -57,10 +63,17 @@ namespace FinsMes
         }
 
 
-        public void Connect(string TargetIp)
+        public void Connect(string TargetIp, string ServerNode, string ClientNode, bool TcpConnect=false)
         {
             MemoryStream ms = new MemoryStream();
-            //useTcp = TcpConnect;
+            useTcp = TcpConnect;
+            string[] snode = ServerNode.Split('.');
+            string[] cnode = ClientNode.Split('.');
+            for(int i = 0; i < 3; i++)
+            {
+                ServerNodeNo[i] = Convert.ToByte(snode[i]);
+                ClientNodeNo[i] = Convert.ToByte(cnode[i]);
+            }
 
             if (useTcp)
             {
@@ -78,8 +91,8 @@ namespace FinsMes
                 ns.WriteTimeout = 1000;
 
                 byte[] node = GetFinsNodeCmd();
-                ClientNodeNo = node[0];
-                ServerNodeNo = node[1];
+                ClientNodeNo[1] = node[0];
+                ServerNodeNo[1] = node[1];
 
             }
             else
@@ -156,30 +169,21 @@ namespace FinsMes
             return node;
         }
 
-        public byte[] GetFinsHeader(string ServerNode, string ClientNode)
+        public byte[] GetFinsHeader()
         {
             byte[] cmd = new byte[10];
-
-            string[] snode = ServerNode.Split('.');
-            string[] cnode = ClientNode.Split('.');
 
             // ----------------- FINSヘッダ
             cmd[0] = 0x80;          // ICF
             cmd[1] = 0x00;          // RSV
             cmd[2] = 0x02;          // GCT
-            cmd[3] = Convert.ToByte(snode[0]);      // DNA  相手先ネットワークアドレス
-            cmd[4] = Convert.ToByte(snode[1]);      // DA1  相手先ノードアドレス
-            cmd[5] = Convert.ToByte(snode[2]);      // DA2  相手先号機アドレス
-            cmd[6] = Convert.ToByte(cnode[0]);      // SNA  発信元ネットワークアドレス
-            cmd[7] = Convert.ToByte(cnode[1]);      // SA1  発信元ノードアドレス
-            cmd[8] = Convert.ToByte(cnode[2]);      // SA2  発信元号機アドレス
+            cmd[3] = ServerNodeNo[0];      // DNA  相手先ネットワークアドレス
+            cmd[4] = ServerNodeNo[1];      // DA1  相手先ノードアドレス
+            cmd[5] = ServerNodeNo[2];      // DA2  相手先号機アドレス
+            cmd[6] = ClientNodeNo[0];      // SNA  発信元ネットワークアドレス
+            cmd[7] = ClientNodeNo[1];      // SA1  発信元ノードアドレス
+            cmd[8] = ClientNodeNo[2];      // SA2  発信元号機アドレス
             cmd[9] = (byte)++sid;        // SID  識別子 00-FFの任意の数値
-
-            if(useTcp)
-            {
-                cmd[4] = ServerNodeNo;
-                cmd[7] = ClientNodeNo;
-            }
 
             return cmd;
         }
@@ -211,9 +215,9 @@ namespace FinsMes
 
         }
 
-        public byte[] CreateFinsFrame(string ServerNode, string ClientNode, byte[] command)
+        public byte[] CreateFinsFrame(byte[] command)
         {
-            byte[] finsheader = GetFinsHeader(ServerNode, ClientNode);
+            byte[] finsheader = GetFinsHeader();
 
             byte[] cmd = null;
             int pos = 0;
@@ -250,8 +254,13 @@ namespace FinsMes
             int rcvsize = udp.Client.Receive(buf);
 
             byte[] res = new byte[rcvsize];
-            Array.Copy(buf,0, res, 0, rcvsize);
+            Array.Copy(buf, 0, res, 0, rcvsize);
             sbMes.Append("[UDP]<- " + BitConverter.ToString(res) + "\r\n");
+
+            byte[] endcode = new byte[2];
+            Array.Copy(res, 12, endcode, 0, 2);
+            if (!(endcode[0] == 0x00 && endcode[1] == 0x00))
+                throw new Exception($"FINS Error : {BitConverter.ToString(endcode)}");
 
             return res;
         }
@@ -286,6 +295,12 @@ namespace FinsMes
 
             sbMes.Append("[TCP]<- " + BitConverter.ToString(res) + "\r\n");
             Console.WriteLine(res.Length);
+
+            byte[] endcode = new byte[2];
+            Array.Copy(res, 28, endcode, 0, 2);
+            if (!(endcode[0] == 0x00 && endcode[1] == 0x00))
+                throw new Exception($"FINS Error : {BitConverter.ToString(endcode)}");
+
             return res;
         }
 
@@ -305,47 +320,47 @@ namespace FinsMes
             else
             {
                 res = UdpSend(command);
-
             }
 
             return res;
         }
 
-        public byte[] MemAddress(string memstring)
+        public byte[] MemOffset(string memstring, short offset)
         {
             string memtype = memstring.Substring(0, 1);
-            string memadr = null;
-            byte[] adr = new byte[3];
+            short memadr = 0;
+            byte[] adr = new byte[4];
 
-            switch (memtype)
+            switch (memtype.ToUpper())
             {
                 case "D":
                     adr[0] = 0x82;
-                    memadr = memstring.Substring(1);
-                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 case "E":
                     string[] strs = memstring.Split('_');
+                    memadr = (short)(int.Parse(strs[1]) + offset);
                     int bank = Convert.ToInt32(strs[0].Substring(1), 16);
                     if (bank < 16)
                         adr[0] = (byte)(0xA0 + Convert.ToByte(bank));
                     else
                         adr[0] = (byte)(0x60 + Convert.ToByte(bank - 16));
 
-                    Array.Copy(BitConverter.GetBytes(short.Parse(strs[1])).Reverse().ToArray(), 0, adr, 1, 2);
+                    Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 case "W":
                     adr[0] = 0xB1;
-                    memadr = memstring.Substring(1);
-                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 case "H":
                     adr[0] = 0xB2;
-                    memadr = memstring.Substring(1);
-                    Array.Copy(BitConverter.GetBytes(short.Parse(memadr)).Reverse().ToArray(), 0, adr, 1, 2);
+                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 default:
@@ -353,12 +368,397 @@ namespace FinsMes
                     if (int.TryParse(memstring, out cioadr))
                     {
                         adr[0] = 0xB0;
-                        Array.Copy(BitConverter.GetBytes((short)cioadr).Reverse().ToArray(), 0, adr, 1, 2);
+                        Array.Copy(BitConverter.GetBytes((short)(cioadr + offset)).Reverse().ToArray(), 0, adr, 1, 2);
                     }
                     break;
             }
 
             return adr;
+        }
+
+        public byte[] read(string memaddr, int readsize)
+        {
+            byte[] finscmd = new byte[8];
+
+            int readnum = readsize / 990;
+            int remainder = readsize % 990;
+            byte[] data = new byte[readsize * 2];
+
+            for (int cnt = 0; cnt < readnum + 1; cnt++)
+            {
+                byte[] MemAddressArray = MemOffset(memaddr, (short)(cnt * 990));
+                short size = 0;
+                if (cnt == readnum)
+                    size = (short)remainder;
+                else
+                    size = (short)990;
+
+                byte[] wordsize = BitConverter.GetBytes(size).Reverse().ToArray();
+
+                finscmd[0] = 0x01;
+                finscmd[1] = 0x01;
+                finscmd[2] = MemAddressArray[0];
+                finscmd[3] = MemAddressArray[1];
+                finscmd[4] = MemAddressArray[2];
+                finscmd[5] = MemAddressArray[3];
+                finscmd[6] = wordsize[0];
+                finscmd[7] = wordsize[1];
+
+                byte[] cmd = CreateFinsFrame(finscmd);
+
+                if (useTcp)
+                {
+                    byte[] res = TcpSend(cmd);
+                    Array.Copy(res, 30, data, cnt * 990 * 2, size * 2);
+                }
+                else
+                {
+                    byte[] res = UdpSend(cmd);
+                    Array.Copy(res, 14, data, cnt * 990 * 2, size * 2);
+                }
+            }
+
+            return data;
+        }
+
+        public void write(string memaddr, byte[] data)
+        {
+            if (data.Length % 2 == 1)
+                throw new Exception($"Write data must be an even number of bytes");
+
+            int WriteWordSize = data.Length / 2;
+
+            int writenum = WriteWordSize / 990;
+            int remainder = WriteWordSize % 990;
+
+            for (int cnt = 0; cnt < writenum + 1; cnt++)
+            {
+                byte[] MemAddressArray = MemOffset(memaddr, (short)(cnt * 990));
+                short size = 0;
+                if (cnt == writenum)
+                    size = (short)remainder;
+                else
+                    size = 990;
+
+                byte[] wordsize = BitConverter.GetBytes(size).Reverse().ToArray();
+
+                byte[] finscmd = new byte[8 + size * 2];
+
+                finscmd[0] = 0x01;
+                finscmd[1] = 0x02;
+                finscmd[2] = MemAddressArray[0];
+                finscmd[3] = MemAddressArray[1];
+                finscmd[4] = MemAddressArray[2];
+                finscmd[5] = MemAddressArray[3];
+                finscmd[6] = wordsize[0];
+                finscmd[7] = wordsize[1];
+                Array.Copy(data, cnt * 990 * 2, finscmd, 8, size * 2);
+
+                byte[] cmd = CreateFinsFrame(finscmd);
+
+                if (useTcp)
+                {
+                    byte[] res = TcpSend(cmd);
+                }
+                else
+                {
+                    byte[] res = UdpSend(cmd);
+                }
+            }
+        }
+
+        public void fill(string memaddr, int size, byte[] data)
+        {
+            byte[] MemAddressArray = MemOffset(memaddr, 0);
+            byte[] wordsize = BitConverter.GetBytes((short)size).Reverse().ToArray();
+
+            byte[] finscmd = new byte[10];
+
+            finscmd[0] = 0x01;
+            finscmd[1] = 0x03;
+            finscmd[2] = MemAddressArray[0];
+            finscmd[3] = MemAddressArray[1];
+            finscmd[4] = MemAddressArray[2];
+            finscmd[5] = MemAddressArray[3];
+            finscmd[6] = wordsize[0];
+            finscmd[7] = wordsize[1];
+            Array.Copy(data, 0, finscmd, 8, 2);
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            byte[] res;
+            if (useTcp)
+                res = TcpSend(cmd);
+            else
+                res = UdpSend(cmd);
+
+        }
+
+        public byte[] MultiRead(string memaddresses)
+        {
+            string[] adrs = memaddresses.Split(',');
+            byte[] adrary = new byte[4 * adrs.Length];
+
+            if (adrs.Length == 0)
+                throw new Exception($"Address Format Error");
+
+            int pos = 0;
+            foreach (string adr in adrs)
+            {
+                byte[] MemAddressArray = MemOffset(adr.Trim(' '), 0);
+                Array.Copy(MemAddressArray, 0, adrary, pos, 4);
+                pos += 4;
+            }
+
+            byte[] finscmd = new byte[2 + adrary.Length];
+
+            finscmd[0] = 0x01;
+            finscmd[1] = 0x04;
+            Array.Copy(adrary, 0, finscmd, 2, adrary.Length);
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data = new byte[adrs.Length * 3];
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+
+            return data;
+        }
+
+        public void run(byte Mode)
+        {
+            byte[] finscmd = new byte[5];
+            finscmd[0] = 0x04;
+            finscmd[1] = 0x01;
+            finscmd[2] = 0xFF;
+            finscmd[3] = 0xFF;
+            finscmd[4] = Mode;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            byte[] res;
+            if (useTcp)
+                res = TcpSend(cmd);
+            else
+                res = UdpSend(cmd);
+        }
+
+        public void stop()
+        {
+            byte[] finscmd = new byte[4];
+            finscmd[0] = 0x04;
+            finscmd[1] = 0x02;
+            finscmd[2] = 0xFF;
+            finscmd[3] = 0xFF;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            byte[] res;
+            if (useTcp)
+                res = TcpSend(cmd);
+            else
+                res = UdpSend(cmd);
+        }
+
+        public byte[] ReadUnitData()
+        {
+            byte[] finscmd = new byte[3];
+            finscmd[0] = 0x05;
+            finscmd[1] = 0x01;
+            finscmd[2] = 0x00;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
+        public byte[] ReadUnitStatus()
+        {
+            byte[] finscmd = new byte[2];
+            finscmd[0] = 0x06;
+            finscmd[1] = 0x01;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
+        public byte[] ReadCycleTime()
+        {
+            byte[] finscmd = new byte[3];
+            finscmd[0] = 0x06;
+            finscmd[1] = 0x20;
+            finscmd[2] = 0x01;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
+        public byte[] Clock()
+        {
+            byte[] finscmd = new byte[2];
+            finscmd[0] = 0x07;
+            finscmd[1] = 0x01;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
+        public void SetClock()
+        {
+            DateTime dt = DateTime.Now;
+
+            byte[] finscmd = new byte[9];
+            finscmd[0] = 0x07;
+            finscmd[1] = 0x02;
+            finscmd[2] = Convert.ToByte(dt.ToString("yy"), 16);
+            finscmd[3] = Convert.ToByte(dt.ToString("MM"), 16);
+            finscmd[4] = Convert.ToByte(dt.ToString("dd"), 16);
+            finscmd[5] = Convert.ToByte(dt.ToString("HH"), 16);
+            finscmd[6] = Convert.ToByte(dt.ToString("mm"), 16);
+            finscmd[7] = Convert.ToByte(dt.ToString("ss"), 16);
+            finscmd[8] = Convert.ToByte(dt.DayOfWeek);
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+            }
+        }
+
+        public void ErrorClear()
+        {
+            byte[] finscmd = new byte[4];
+            finscmd[0] = 0x21;
+            finscmd[1] = 0x01;
+            finscmd[2] = 0xFF;
+            finscmd[3] = 0xFF;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+            }
+        }
+
+        public byte[] ErrorLogRead()
+        {
+            byte[] finscmd = new byte[6];
+            finscmd[0] = 0x21;
+            finscmd[1] = 0x02;
+            finscmd[2] = 0x00;
+            finscmd[3] = 0x00;
+            finscmd[4] = 0x00;
+            finscmd[5] = 0x0A;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
+        public void ErrorLogClear()
+        {
+            DateTime dt = DateTime.Now;
+
+            byte[] finscmd = new byte[2];
+            finscmd[0] = 0x21;
+            finscmd[1] = 0x03;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+            }
         }
 
     }

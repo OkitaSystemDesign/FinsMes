@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.cmbSrcIP = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -78,6 +79,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbCommType = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtDumpColMax = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -150,6 +153,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.txtDumpColMax);
             this.splitContainer1.Panel1.Controls.Add(this.txtRes);
             this.splitContainer1.Panel1.Controls.Add(this.label8);
             this.splitContainer1.Panel1.Controls.Add(this.txtCmd);
@@ -330,7 +334,7 @@
             this.txtMultiRead.Name = "txtMultiRead";
             this.txtMultiRead.Size = new System.Drawing.Size(377, 19);
             this.txtMultiRead.TabIndex = 0;
-            this.txtMultiRead.Text = "D0,E1_0,W10";
+            this.txtMultiRead.Text = "D0,E0_0,W10";
             // 
             // label7
             // 
@@ -604,13 +608,31 @@
             this.cmbCommType.Name = "cmbCommType";
             this.cmbCommType.Size = new System.Drawing.Size(66, 20);
             this.cmbCommType.TabIndex = 10;
-            this.cmbCommType.SelectedIndexChanged += new System.EventHandler(this.cmbCommType_SelectedIndexChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(573, 35);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // txtDumpColMax
+            // 
+            this.txtDumpColMax.Location = new System.Drawing.Point(549, 120);
+            this.txtDumpColMax.Name = "txtDumpColMax";
+            this.txtDumpColMax.Size = new System.Drawing.Size(64, 19);
+            this.txtDumpColMax.TabIndex = 34;
+            this.txtDumpColMax.Text = "10";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 611);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cmbCommType);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -622,6 +644,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cmbSrcIP);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "FinsMes";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
@@ -706,6 +729,8 @@
         private System.Windows.Forms.TextBox txtStartRec;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtDumpColMax;
     }
 }
 
