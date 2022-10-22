@@ -454,7 +454,7 @@ namespace FinsMes
 
                     fins.Connect(txtTargetIP.Text, txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, TcpConnect);
 
-                    txtLineMonitor.AppendText(fins.Message);
+                    txtLineMonitor.AppendText(fins.MessageLog);
 
                     connect(true);
                 }
@@ -485,7 +485,7 @@ namespace FinsMes
                 txtRes.AppendText("<<-- Recive\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
                 Console.WriteLine(BitConverter.ToString(senddata));
 
-                txtLineMonitor.AppendText(fins.Message);
+                txtLineMonitor.AppendText(fins.MessageLog);
 
             }
             catch (System.Net.Sockets.SocketException ex)
@@ -507,7 +507,7 @@ namespace FinsMes
             // Read 0101
             byte[] res = fins.read("D0", 1000);
             txtRes.AppendText("<Read Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // Write 0102
             byte[] writedata = new byte[2000];
@@ -518,68 +518,68 @@ namespace FinsMes
             }
             fins.write("D1000", writedata);
             txtRes.AppendText("<Write Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // Fill 0103
             byte[] filldata = BitConverter.GetBytes((short)100).Reverse().ToArray();
             fins.fill("D2000", 100, filldata);
             txtRes.AppendText("<Fill Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // MultiRead 0x0104
             res = fins.MultiRead("D0,D10,D50");
             txtRes.AppendText("<MultiRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ReadUnitData 0x0501
             res =fins.ReadUnitData();
             txtRes.AppendText("<ReadUnitData Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ReadUnitStatus 0x0601
             res = fins.ReadUnitStatus();
             txtRes.AppendText("<ReadUnitStatus Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ReadCycleTime 0x0620
             res = fins.ReadUnitStatus();
             txtRes.AppendText("<ReadCycleTime Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // Clock 0x0701
             res = fins.Clock();
             txtRes.AppendText("<Clock Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // SetClock 0x0702
             fins.SetClock();
             txtRes.AppendText("<SetClock Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // stop 0x0402
             fins.stop();
             txtRes.AppendText("<stop Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ErrorClear 0x2101
             fins.ErrorClear();
             txtRes.AppendText("<ErrorClear Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ErrorLogRead 0x2102
             res = fins.ErrorLogRead();
             txtRes.AppendText("<ErrorLogRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // ErrorLogClear 0x2103
             fins.ErrorLogClear();
             txtRes.AppendText("<ErrorLogClear Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
             // run 0x0401
             fins.run(0x02);
             txtRes.AppendText("<run Command>\r\n" + "\r\n\r\n");
-            txtLineMonitor.AppendText(fins.Message);
+            txtLineMonitor.AppendText(fins.MessageLog);
 
         }
 

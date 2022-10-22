@@ -31,7 +31,7 @@ namespace FinsMes
         StringBuilder sbMes = new StringBuilder();
 
 
-        public string Message
+        public string MessageLog
         {
             get
             {
