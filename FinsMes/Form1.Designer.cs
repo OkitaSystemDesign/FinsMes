@@ -72,6 +72,9 @@
             this.txtStartRec = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.btnDirectCommand = new System.Windows.Forms.Button();
             this.btnCreateSendMes = new System.Windows.Forms.Button();
             this.cmbCmd = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -81,9 +84,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbCommType = new System.Windows.Forms.ComboBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnDirectCommand = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -547,6 +547,37 @@
             this.label17.TabIndex = 0;
             this.label17.Text = "開始レコードNo";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.btnDirectCommand);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(616, 50);
+            this.tabPage3.TabIndex = 10;
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(30, 14);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(287, 12);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "FinsMessageクラスのメソッドを連続して送信してテストします";
+            // 
+            // btnDirectCommand
+            // 
+            this.btnDirectCommand.Enabled = false;
+            this.btnDirectCommand.Location = new System.Drawing.Point(393, 6);
+            this.btnDirectCommand.Name = "btnDirectCommand";
+            this.btnDirectCommand.Size = new System.Drawing.Size(127, 30);
+            this.btnDirectCommand.TabIndex = 0;
+            this.btnDirectCommand.Text = "連続メソッドテスト";
+            this.btnDirectCommand.UseVisualStyleBackColor = true;
+            this.btnDirectCommand.Click += new System.EventHandler(this.btnDirectCommand_Click);
+            // 
             // btnCreateSendMes
             // 
             this.btnCreateSendMes.Location = new System.Drawing.Point(199, 111);
@@ -632,37 +663,6 @@
             this.cmbCommType.Size = new System.Drawing.Size(66, 20);
             this.cmbCommType.TabIndex = 10;
             this.cmbCommType.SelectedIndexChanged += new System.EventHandler(this.cmbCommType_SelectedIndexChanged);
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.btnDirectCommand);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(616, 50);
-            this.tabPage3.TabIndex = 10;
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // btnDirectCommand
-            // 
-            this.btnDirectCommand.Enabled = false;
-            this.btnDirectCommand.Location = new System.Drawing.Point(492, 6);
-            this.btnDirectCommand.Name = "btnDirectCommand";
-            this.btnDirectCommand.Size = new System.Drawing.Size(112, 30);
-            this.btnDirectCommand.TabIndex = 0;
-            this.btnDirectCommand.Text = "連続メソッドテスト";
-            this.btnDirectCommand.UseVisualStyleBackColor = true;
-            this.btnDirectCommand.Click += new System.EventHandler(this.btnDirectCommand_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(30, 14);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(287, 12);
-            this.label11.TabIndex = 1;
-            this.label11.Text = "FinsMessageクラスのメソッドを連続して送信してテストします";
             // 
             // Form1
             // 
