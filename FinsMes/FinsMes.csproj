@@ -89,8 +89,8 @@
     <Content Include="finsm.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FinsMessage\Fins\Fins.csproj">
-      <Project>{4a6e0db0-4302-46ad-9172-190a9d7203c8}</Project>
+    <ProjectReference Include="..\Fins\Fins.csproj">
+      <Project>{dc0ae449-5b9b-4ef0-8c65-7616d7d3b94d}</Project>
       <Name>Fins</Name>
     </ProjectReference>
   </ItemGroup>
