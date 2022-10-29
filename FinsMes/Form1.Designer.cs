@@ -35,6 +35,8 @@
             this.txtTargetIP = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtDumpColMax = new System.Windows.Forms.TextBox();
             this.txtRes = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtCmd = new System.Windows.Forms.TextBox();
@@ -79,8 +81,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbCommType = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.txtDumpColMax = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnDirectCommand = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -95,6 +98,7 @@
             this.tabPage6.SuspendLayout();
             this.tabPage8.SuspendLayout();
             this.tabPage9.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -153,6 +157,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label10);
             this.splitContainer1.Panel1.Controls.Add(this.txtDumpColMax);
             this.splitContainer1.Panel1.Controls.Add(this.txtRes);
             this.splitContainer1.Panel1.Controls.Add(this.label8);
@@ -169,6 +174,23 @@
             this.splitContainer1.Size = new System.Drawing.Size(636, 535);
             this.splitContainer1.SplitterDistance = 416;
             this.splitContainer1.TabIndex = 5;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(484, 123);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(89, 12);
+            this.label10.TabIndex = 35;
+            this.label10.Text = "DUMP 表示列数";
+            // 
+            // txtDumpColMax
+            // 
+            this.txtDumpColMax.Location = new System.Drawing.Point(581, 120);
+            this.txtDumpColMax.Name = "txtDumpColMax";
+            this.txtDumpColMax.Size = new System.Drawing.Size(32, 19);
+            this.txtDumpColMax.TabIndex = 34;
+            this.txtDumpColMax.Text = "10";
             // 
             // txtRes
             // 
@@ -188,9 +210,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(9, 135);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 12);
+            this.label8.Size = new System.Drawing.Size(89, 12);
             this.label8.TabIndex = 32;
-            this.label8.Text = "送信データ";
+            this.label8.Text = "送信FINSコマンド";
             // 
             // txtCmd
             // 
@@ -225,6 +247,7 @@
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage9);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(5, 29);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
@@ -530,9 +553,9 @@
             this.btnCreateSendMes.Name = "btnCreateSendMes";
             this.btnCreateSendMes.Size = new System.Drawing.Size(195, 36);
             this.btnCreateSendMes.TabIndex = 24;
-            this.btnCreateSendMes.Text = "Convert to Send Data";
+            this.btnCreateSendMes.Text = "Create FINS Command";
             this.btnCreateSendMes.UseVisualStyleBackColor = true;
-            this.btnCreateSendMes.Click += new System.EventHandler(this.btnCreateSendMes_Click);
+            this.btnCreateSendMes.Click += new System.EventHandler(this.btnCreateFinsCommand_Click);
             // 
             // cmbCmd
             // 
@@ -608,31 +631,44 @@
             this.cmbCommType.Name = "cmbCommType";
             this.cmbCommType.Size = new System.Drawing.Size(66, 20);
             this.cmbCommType.TabIndex = 10;
+            this.cmbCommType.SelectedIndexChanged += new System.EventHandler(this.cmbCommType_SelectedIndexChanged);
             // 
-            // button1
+            // tabPage3
             // 
-            this.button1.Location = new System.Drawing.Point(573, 35);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.btnDirectCommand);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(616, 50);
+            this.tabPage3.TabIndex = 10;
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // txtDumpColMax
+            // btnDirectCommand
             // 
-            this.txtDumpColMax.Location = new System.Drawing.Point(549, 120);
-            this.txtDumpColMax.Name = "txtDumpColMax";
-            this.txtDumpColMax.Size = new System.Drawing.Size(64, 19);
-            this.txtDumpColMax.TabIndex = 34;
-            this.txtDumpColMax.Text = "10";
+            this.btnDirectCommand.Enabled = false;
+            this.btnDirectCommand.Location = new System.Drawing.Point(492, 6);
+            this.btnDirectCommand.Name = "btnDirectCommand";
+            this.btnDirectCommand.Size = new System.Drawing.Size(112, 30);
+            this.btnDirectCommand.TabIndex = 0;
+            this.btnDirectCommand.Text = "連続メソッドテスト";
+            this.btnDirectCommand.UseVisualStyleBackColor = true;
+            this.btnDirectCommand.Click += new System.EventHandler(this.btnDirectCommand_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(30, 14);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(287, 12);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "FinsMessageクラスのメソッドを連続して送信してテストします";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 611);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.cmbCommType);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -672,6 +708,8 @@
             this.tabPage8.PerformLayout();
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -729,8 +767,11 @@
         private System.Windows.Forms.TextBox txtStartRec;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox txtDumpColMax;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button btnDirectCommand;
+        private System.Windows.Forms.Label label11;
     }
 }
 

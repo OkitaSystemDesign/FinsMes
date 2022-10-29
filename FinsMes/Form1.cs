@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FinsMes
@@ -15,7 +13,9 @@ namespace FinsMes
     public partial class Form1 : Form
     {
         private bool connected = false;
-        private FinsMessage fins = null;
+        
+        //private FinsMessage fins = null;
+        private Fins.Message fins  = null;
         int DumpColMax = 16;
 
         private class ItemSet
@@ -46,8 +46,8 @@ namespace FinsMes
             InitializeComponent();
 
             List<ItemSet> src = new List<ItemSet>();
-            src.Add(new ItemSet(0x0101, "0101 変数読出"));
-            src.Add(new ItemSet(0x0102, "0102 変数書込"));
+            src.Add(new ItemSet(0x0101, "0101 メモリ読出"));
+            src.Add(new ItemSet(0x0102, "0102 メモリ書込"));
             src.Add(new ItemSet(0x0103, "0103 一括書込"));
             src.Add(new ItemSet(0x0104, "0104 複合読出"));
             src.Add(new ItemSet(0x0401, "0401 運転開始"));
@@ -60,6 +60,7 @@ namespace FinsMes
             src.Add(new ItemSet(0x2101, "2101 異常解除"));
             src.Add(new ItemSet(0x2102, "2102 異常履歴"));
             src.Add(new ItemSet(0x2103, "2103 異常履歴クリア"));
+            src.Add(new ItemSet(0x0000, "---- メソッドテスト"));
             cmbCmd.DataSource = src;
             cmbCmd.DisplayMember = "Name";
             cmbCmd.ValueMember = "Value";
@@ -109,9 +110,7 @@ namespace FinsMes
             lblWriteData.Visible = false;
             txtWriteData.Visible = false;
 
-            fins = new FinsMessage();
-
-            cmbCommType.SelectedIndex = 0;
+            fins = new Fins.Message();
 
         }
 
@@ -122,6 +121,9 @@ namespace FinsMes
             txtTargetIP.Text = Properties.Settings.Default.TargetIP;
             txtFinsSrcAdr.Text = Properties.Settings.Default.SrcFins;
             txtFinsTargetAdr.Text = Properties.Settings.Default.TargetFins;
+
+            cmbCommType.SelectedIndex = 0;
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -282,6 +284,10 @@ namespace FinsMes
 
                     break;
 
+                case 0x0000:
+
+                    break;
+
                 default:
                     break;
             }
@@ -289,33 +295,15 @@ namespace FinsMes
             return finscmd;
         }
 
-        private void btnCreateSendMes_Click(object sender, EventArgs e)
+        private void btnCreateFinsCommand_Click(object sender, EventArgs e)
         {
             byte[] finscmd = CreateFinsCmd();
-            byte[] cmd = fins.CreateFinsFrame(finscmd);
-
-            /*
-            byte[] finsheader = fins.GetFinsHeader(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
-
-            byte[] cmd = null;
-            int pos = 0;
-            if (cmbCommType.SelectedItem.ToString() == "TCP")
+            if (finscmd != null)
             {
-                byte[] finsTcpheader = fins.GetFinsTcpHeader(finsheader.Length + finscmd.Length);
-                cmd = new byte[finsTcpheader.Length + finsheader.Length + finscmd.Length];
-                Array.Copy(finsTcpheader, 0, cmd, 0, finsTcpheader.Length);
-                pos = finsTcpheader.Length;
-            }
-            else
-            {
-                cmd = new byte[finsheader.Length + finscmd.Length];
-            }
+                byte[] cmd = fins.CreateFinsFrame(finscmd);
 
-            Array.Copy(finsheader, 0, cmd, pos, finsheader.Length);
-            pos += finsheader.Length;
-            Array.Copy(finscmd, 0, cmd, pos, finscmd.Length);
-            */
-            txtCmd.Text = BitConverter.ToString(cmd);
+                txtCmd.Text = BitConverter.ToString(cmd);
+            }
         }
 
         private void cmbCmd_SelectedIndexChanged(object sender, EventArgs e)
@@ -388,6 +376,10 @@ namespace FinsMes
                 case 0x2103:
                     tabControl1.SelectedIndex = 0;
                     break;
+
+                case 0x0000:
+                    tabControl1.SelectedIndex = 8;
+                    break;
             }
         }
 
@@ -411,18 +403,19 @@ namespace FinsMes
             return bytes;
         }
 
-
         private void connect(bool value)
         {
             connected = value;
 
             cmbCommType.Enabled = !value;
             cmbSrcIP.Enabled = !value;
+            
             txtTargetIP.Enabled = !value;
             txtFinsSrcAdr.Enabled = !value;
             txtFinsTargetAdr.Enabled   = !value;
 
             btnSend.Enabled = value;
+            btnDirectCommand.Enabled = value;
 
             if (value)
             {
@@ -452,9 +445,25 @@ namespace FinsMes
                     else
                         TcpConnect = true;
 
-                    fins.Connect(txtTargetIP.Text, txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, TcpConnect);
+                    fins.SetFinsNode(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
+                    fins.Connect(txtTargetIP.Text, TcpConnect);
 
                     txtLineMonitor.AppendText(fins.MessageLog);
+
+                    if (TcpConnect && txtCmd.Text != "")
+                    {
+                        byte[] senddata = CommandTextToBytes(txtCmd.Text);
+                        byte ClientNode = fins.GetFinsClientNode();
+
+                        if (senddata[23] != ClientNode)
+                        {
+                            MessageBox.Show("送信FINSコマンドの送信元FINSノードNoが変わります\r\nNode = " + Convert.ToString(ClientNode, 16),
+                                "FINS Client Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            senddata[23] = ClientNode;
+                            txtCmd.Text = BitConverter.ToString(senddata);
+                        }
+                    }
 
                     connect(true);
                 }
@@ -465,16 +474,23 @@ namespace FinsMes
             }
         }
 
+        private byte[] CommandTextToBytes(string text)
+        {
+            string[] str = text.Split('-');
+            byte[] bytes = new byte[str.Length];
+            for (int i = 0; i < str.Length; i++)
+            {
+                bytes[i] = Convert.ToByte(str[i], 16);
+            }
+
+            return bytes;
+        }
+
         private void btnSend_Click(object sender, EventArgs e)
         {
             try
             {
-                string[] str = txtCmd.Text.Split('-');
-                byte[] senddata = new byte[str.Length];
-                for (int i = 0; i < str.Length; i++)
-                {
-                    senddata[i] = Convert.ToByte(str[i], 16);
-                }
+                byte[] senddata = CommandTextToBytes(txtCmd.Text);
                 Console.WriteLine(BitConverter.ToString(senddata));
 
                 DumpColMax = int.Parse(txtDumpColMax.Text);
@@ -493,6 +509,11 @@ namespace FinsMes
                 MessageBox.Show(ex.Message, "Socket", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 connect(false);
             }
+            catch (Fins.FinsException ex)
+            {
+                MessageBox.Show(ex.Message, "FinsError", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                connect(false);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -500,39 +521,39 @@ namespace FinsMes
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void DirectCommandTest()
         {
             DumpColMax = int.Parse(txtDumpColMax.Text);
 
             // Read 0101
             byte[] res = fins.read("D0", 1000);
-            txtRes.AppendText("<Read Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtRes.AppendText("<Read Command (D0-999)>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // Write 0102
             byte[] writedata = new byte[2000];
-            for(int cnt = 0; cnt<1000; cnt++)
+            for (int cnt = 0; cnt < 1000; cnt++)
             {
                 byte[] data = BitConverter.GetBytes((short)cnt).Reverse().ToArray();
                 Array.Copy(data, 0, writedata, cnt * 2, 2);
             }
             fins.write("D1000", writedata);
-            txtRes.AppendText("<Write Command>\r\n" + "\r\n\r\n");
+            txtRes.AppendText("<Write Command (D1000-1999)>\r\n" + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // Fill 0103
             byte[] filldata = BitConverter.GetBytes((short)100).Reverse().ToArray();
             fins.fill("D2000", 100, filldata);
-            txtRes.AppendText("<Fill Command>\r\n" + "\r\n\r\n");
+            txtRes.AppendText("<Fill Command (D2000-2099)>\r\n" + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // MultiRead 0x0104
             res = fins.MultiRead("D0,D10,D50");
-            txtRes.AppendText("<MultiRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
+            txtRes.AppendText("<MultiRead Command (D0, D10, D50)>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // ReadUnitData 0x0501
-            res =fins.ReadUnitData();
+            res = fins.ReadUnitData();
             txtRes.AppendText("<ReadUnitData Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
@@ -542,7 +563,7 @@ namespace FinsMes
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // ReadCycleTime 0x0620
-            res = fins.ReadUnitStatus();
+            res = fins.ReadCycleTime();
             txtRes.AppendText("<ReadCycleTime Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
@@ -581,8 +602,81 @@ namespace FinsMes
             txtRes.AppendText("<run Command>\r\n" + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
+
+            // Convert ReadData
+            txtRes.AppendText("----- Convert ReadData -----\r\n\r\n");
+
+            res = fins.read("D0", 2);
+            txtRes.AppendText("Read BOOL (D0-1) toString\r\n" + fins.WordToBin(res) + "\r\n\r\n");      // ゼロ埋めビット表記文字列
+
+            BitArray bits = new BitArray(res.Reverse().ToArray());
+            StringBuilder sb = new StringBuilder();
+            for (int i = bits.Length; i > 0; i--)
+            {
+                char c = bits[i - 1] ? '1' : '0';
+                sb.Append(c);
+            }
+            txtRes.AppendText("Read BOOL (D0-1) toBitArray\r\n" + String.Join(",", sb.ToString()) + "\r\n\r\n");    // BitArray
+
+            bool[] bools = fins.toBoolArray(res);
+            txtRes.AppendText("Read BOOL (D0-1)\r\n" + String.Join(",", bools) + "\r\n\r\n");           // BOOL型
+
+            res = fins.read("D10", 10);
+            short[] data16 = fins.toInt16(res);
+            txtRes.AppendText("Read INT x 10 (D10-19)\r\n" + String.Join(",", data16) + "\r\n\r\n");    // INT型
+
+            res = fins.read("D20", 10);
+            int[] data32 = fins.toInt32(res);
+            txtRes.AppendText("Read DINT x 5 (D20-29)\r\n" + String.Join(",", data32) + "\r\n\r\n");    // DINT型
+
+            res = fins.read("D30", 8);
+            long[] data64 = fins.toInt64(res);
+            txtRes.AppendText("Read LINT x 2 (D30-37)\r\n" + String.Join(",", data64) + "\r\n\r\n");    // LINT型
+
+            res = fins.read("D40", 10);
+            ushort[] datau16 = fins.toUInt16(res);
+            txtRes.AppendText("Read UINT x 10 (D430-49)\r\n" + String.Join(",", data16) + "\r\n\r\n");  // UINT型
+
+            res = fins.read("D50", 10);
+            uint[] datau32 = fins.toUInt32(res);
+            txtRes.AppendText("Read UDINT x 5 (D50-59)\r\n" + String.Join(",", data32) + "\r\n\r\n");   // UDINT型
+
+            res = fins.read("D60", 8);
+            ulong[] datau64 = fins.toUInt64(res);
+            txtRes.AppendText("Read ULINT x 2 (D60-67)\r\n" + String.Join(",", data64) + "\r\n\r\n");   // ULINT型
+
+            res = fins.read("D70", 10);
+            float[] dataf = fins.toFloat(res);
+            txtRes.AppendText("Read REAL x 5 (D70-79)\r\n" + String.Join(",", dataf) + "\r\n\r\n");     // REAL型
+
+            res = fins.read("D80", 8);
+            double[] datad = fins.toDoublet(res);
+            txtRes.AppendText("Read LREAL x 2 (D80-87)\r\n" + String.Join(",", datad) + "\r\n\r\n");    // LREAL型
+
+            res = fins.read("D90", 10);
+            string datastr = fins.toString(res);
+            txtRes.AppendText("Read String (D90-99)\r\n" + datastr);                                    // STRING型
+            txtRes.AppendText("\r\n\r\n");
+
         }
 
+        private void btnDirectCommand_Click(object sender, EventArgs e)
+        {
+            DirectCommandTest();
+        }
 
+        private void cmbCommType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbCommType.SelectedIndex == 0)
+            {
+                fins.useTcp = false;
+            }
+            else
+            {
+                fins.useTcp = true;
+            }
+
+            txtCmd.Clear();
+        }
     }
 }

@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dump.cs" />
-    <Compile Include="FinsMessage.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="finsm.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FinsMessage\Fins\Fins.csproj">
+      <Project>{4a6e0db0-4302-46ad-9172-190a9d7203c8}</Project>
+      <Name>Fins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
