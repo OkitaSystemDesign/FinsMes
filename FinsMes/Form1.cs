@@ -14,7 +14,6 @@ namespace FinsMes
     {
         private bool connected = false;
         
-        //private FinsMessage fins = null;
         private Fins.Message fins  = null;
         int DumpColMax = 16;
 
