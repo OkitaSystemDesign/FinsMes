@@ -269,7 +269,7 @@ namespace Fins
             }
         }
 
-        public byte[] GetServerFinsNodeCmd()
+        private byte[] GetServerFinsNodeCmd()
         {
             byte[] node = new byte[2];
 
@@ -316,7 +316,7 @@ namespace Fins
             return node;
         }
 
-        public byte[] GetFinsHeader()
+        private byte[] GetFinsHeader()
         {
             byte[] cmd = new byte[10];
 
@@ -335,7 +335,7 @@ namespace Fins
             return cmd;
         }
 
-        public byte[] GetFinsTcpHeader(int CommandLength)
+        private byte[] GetFinsTcpHeader(int CommandLength)
         {
             byte[] cmd = new byte[16];
 
