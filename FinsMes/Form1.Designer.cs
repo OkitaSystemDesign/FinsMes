@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbSrcIP = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtTargetIP = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
@@ -84,6 +82,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbCommType = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -101,46 +101,28 @@
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(116, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "送信元";
-            // 
-            // cmbSrcIP
-            // 
-            this.cmbSrcIP.FormattingEnabled = true;
-            this.cmbSrcIP.Location = new System.Drawing.Point(163, 12);
-            this.cmbSrcIP.Name = "cmbSrcIP";
-            this.cmbSrcIP.Size = new System.Drawing.Size(121, 20);
-            this.cmbSrcIP.TabIndex = 1;
-            this.cmbSrcIP.Click += new System.EventHandler(this.cmbSrcIP_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(318, 15);
+            this.label2.Location = new System.Drawing.Point(84, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "送信先";
+            this.label2.Text = "接続先";
             // 
             // txtTargetIP
             // 
             this.txtTargetIP.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.txtTargetIP.Location = new System.Drawing.Point(365, 12);
+            this.txtTargetIP.Location = new System.Drawing.Point(131, 24);
             this.txtTargetIP.Name = "txtTargetIP";
             this.txtTargetIP.Size = new System.Drawing.Size(100, 19);
             this.txtTargetIP.TabIndex = 3;
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(498, 10);
+            this.btnConnect.Location = new System.Drawing.Point(527, 7);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(91, 23);
+            this.btnConnect.Size = new System.Drawing.Size(110, 37);
             this.btnConnect.TabIndex = 4;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -151,7 +133,7 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 64);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 72);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -171,8 +153,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtLineMonitor);
-            this.splitContainer1.Size = new System.Drawing.Size(636, 535);
-            this.splitContainer1.SplitterDistance = 416;
+            this.splitContainer1.Size = new System.Drawing.Size(636, 527);
+            this.splitContainer1.SplitterDistance = 396;
             this.splitContainer1.TabIndex = 5;
             // 
             // label10
@@ -202,7 +184,7 @@
             this.txtRes.Multiline = true;
             this.txtRes.Name = "txtRes";
             this.txtRes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRes.Size = new System.Drawing.Size(616, 214);
+            this.txtRes.Size = new System.Drawing.Size(616, 194);
             this.txtRes.TabIndex = 33;
             // 
             // label8
@@ -616,41 +598,41 @@
             this.txtLineMonitor.Multiline = true;
             this.txtLineMonitor.Name = "txtLineMonitor";
             this.txtLineMonitor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtLineMonitor.Size = new System.Drawing.Size(620, 109);
+            this.txtLineMonitor.Size = new System.Drawing.Size(620, 121);
             this.txtLineMonitor.TabIndex = 20;
             this.txtLineMonitor.WordWrap = false;
             // 
             // txtFinsSrcAdr
             // 
-            this.txtFinsSrcAdr.Location = new System.Drawing.Point(163, 38);
+            this.txtFinsSrcAdr.Location = new System.Drawing.Point(298, 24);
             this.txtFinsSrcAdr.Name = "txtFinsSrcAdr";
-            this.txtFinsSrcAdr.Size = new System.Drawing.Size(100, 19);
+            this.txtFinsSrcAdr.Size = new System.Drawing.Size(73, 19);
             this.txtFinsSrcAdr.TabIndex = 6;
             // 
             // txtFinsTargetAdr
             // 
-            this.txtFinsTargetAdr.Location = new System.Drawing.Point(365, 39);
+            this.txtFinsTargetAdr.Location = new System.Drawing.Point(424, 24);
             this.txtFinsTargetAdr.Name = "txtFinsTargetAdr";
-            this.txtFinsTargetAdr.Size = new System.Drawing.Size(100, 19);
+            this.txtFinsTargetAdr.Size = new System.Drawing.Size(73, 19);
             this.txtFinsTargetAdr.TabIndex = 7;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(91, 42);
+            this.label3.Location = new System.Drawing.Point(251, 27);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 12);
+            this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 8;
-            this.label3.Text = "FINSアドレス";
+            this.label3.Text = "送信元";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(293, 44);
+            this.label4.Location = new System.Drawing.Point(377, 27);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 12);
+            this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 9;
-            this.label4.Text = "FINSアドレス";
+            this.label4.Text = "送信先";
             // 
             // cmbCommType
             // 
@@ -658,17 +640,37 @@
             this.cmbCommType.Items.AddRange(new object[] {
             "UDP",
             "TCP"});
-            this.cmbCommType.Location = new System.Drawing.Point(12, 12);
+            this.cmbCommType.Location = new System.Drawing.Point(12, 24);
             this.cmbCommType.Name = "cmbCommType";
             this.cmbCommType.Size = new System.Drawing.Size(66, 20);
             this.cmbCommType.TabIndex = 10;
             this.cmbCommType.SelectedIndexChanged += new System.EventHandler(this.cmbCommType_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(219, 14);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "IPアドレス";
+            // 
+            // label12
+            // 
+            this.label12.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.label12.Location = new System.Drawing.Point(253, 9);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(244, 14);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "FINSアドレス";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 611);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbCommType);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -678,8 +680,6 @@
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.txtTargetIP);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.cmbSrcIP);
-            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "FinsMes";
@@ -716,9 +716,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbSrcIP;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtTargetIP;
         private System.Windows.Forms.Button btnConnect;
@@ -772,6 +769,8 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnDirectCommand;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label12;
     }
 }
 

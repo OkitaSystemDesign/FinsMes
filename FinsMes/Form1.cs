@@ -14,7 +14,7 @@ namespace FinsMes
     {
         private bool connected = false;
         
-        private Fins.Message fins  = null;
+        private Osd.Omron.Fins fins  = null;
         int DumpColMax = 16;
 
         private class ItemSet
@@ -109,14 +109,13 @@ namespace FinsMes
             lblWriteData.Visible = false;
             txtWriteData.Visible = false;
 
-            fins = new Fins.Message();
+            fins = new Osd.Omron.Fins();
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            cmbSrcIP.Text = Properties.Settings.Default.SrcIP;
             txtTargetIP.Text = Properties.Settings.Default.TargetIP;
             txtFinsSrcAdr.Text = Properties.Settings.Default.SrcFins;
             txtFinsTargetAdr.Text = Properties.Settings.Default.TargetFins;
@@ -127,34 +126,10 @@ namespace FinsMes
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Properties.Settings.Default.SrcIP = cmbSrcIP.Text;
             Properties.Settings.Default.TargetIP = txtTargetIP.Text;
             Properties.Settings.Default.SrcFins = txtFinsSrcAdr.Text;
             Properties.Settings.Default.TargetFins = txtFinsTargetAdr.Text;
             Properties.Settings.Default.Save();
-        }
-
-        private void cmbSrcIP_Click(object sender, EventArgs e)
-        {
-            cmbSrcIP.Items.Clear();
-
-            byte[] ip = new byte[4];
-            IPHostEntry IPHstEnt = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress targetip in IPHstEnt.AddressList)
-            {
-                ip = targetip.GetAddressBytes();
-                if (ip.Length == 4)
-                {
-                    string IpString = "";
-                    for (int i = 0; i < 3; i++)
-                    {
-                        IpString += ip[i].ToString() + '.';
-                    }
-                    IpString += ip[3].ToString();
-                    cmbSrcIP.Items.Add(IpString);
-                }
-            }
-
         }
 
         private byte[] CreateFinsCmd()
@@ -407,7 +382,6 @@ namespace FinsMes
             connected = value;
 
             cmbCommType.Enabled = !value;
-            cmbSrcIP.Enabled = !value;
             
             txtTargetIP.Enabled = !value;
             txtFinsSrcAdr.Enabled = !value;
@@ -444,22 +418,26 @@ namespace FinsMes
                     else
                         TcpConnect = true;
 
-                    fins.SetFinsNode(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
-                    fins.Connect(txtTargetIP.Text, TcpConnect);
+                    byte[] FinsNode = fins.Connect(txtTargetIP.Text, txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, TcpConnect);
 
                     txtLineMonitor.AppendText(fins.MessageLog);
 
-                    if (TcpConnect && txtCmd.Text != "")
+                    if (txtCmd.Text != "")
                     {
                         byte[] senddata = CommandTextToBytes(txtCmd.Text);
-                        byte ClientNode = fins.GetFinsClientNode();
 
-                        if (senddata[23] != ClientNode)
+                        int ClientNodePos;
+                        if (TcpConnect)
+                            ClientNodePos = 23;
+                        else
+                            ClientNodePos = 7;
+
+                        if (senddata[ClientNodePos] != FinsNode[0])
                         {
-                            MessageBox.Show("送信FINSコマンドの送信元FINSノードNoが変わります\r\nNode = " + Convert.ToString(ClientNode, 16),
+                            MessageBox.Show("送信FINSコマンドの送信元FINSノードNoが変わります\r\nNode = " + Convert.ToString(FinsNode[0], 16),
                                 "FINS Client Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            senddata[23] = ClientNode;
+                            senddata[ClientNodePos] = FinsNode[0];
                             txtCmd.Text = BitConverter.ToString(senddata);
                         }
                     }
@@ -508,7 +486,7 @@ namespace FinsMes
                 MessageBox.Show(ex.Message, "Socket", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 connect(false);
             }
-            catch (Fins.FinsException ex)
+            catch (Osd.Omron.FinsException ex)
             {
                 MessageBox.Show(ex.Message, "FinsError", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 connect(false);

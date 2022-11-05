@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fins
+namespace Osd.Omron
 {
     [Serializable]
     public class FinsException : Exception
@@ -22,7 +22,7 @@ namespace Fins
 
     }
 
-    public class Message : IDisposable
+    public class Fins : IDisposable
     {
         private TcpClient tcp;
         private UdpClient udp;
@@ -30,8 +30,8 @@ namespace Fins
         private Int32 TargetPort = 9600;
         static byte sid = 0;
 
-        private byte[] ClientNodeNo = new byte[] { 0, 0, 0 };
-        private byte[] ServerNodeNo = new byte[] { 0, 0, 0 };
+        private byte[] ClientFinsAdr = new byte[] { 0, 0, 0 };
+        private byte[] ServerFinsAdr = new byte[] { 0, 0, 0 };
 
         public bool useTcp = false;
 
@@ -46,12 +46,12 @@ namespace Fins
             }
         }
 
-        public Message()
+        public Fins()
         {
 
         }
 
-        ~Message()
+        ~Fins()
         {
 
         }
@@ -197,31 +197,38 @@ namespace Fins
             return Message;
         }
 
-        public void SetFinsNode(string ServerNode, string ClientNode)
+        private void SetFinsNode(string ServerFinsAddress, string ClientFinsAddress)
         {
-            string[] snode = ServerNode.Split('.');
-            string[] cnode = ClientNode.Split('.');
+            string[] snode = ServerFinsAddress.Split('.');
+            string[] cnode = ClientFinsAddress.Split('.');
 
             if (snode.Length == 3 && cnode.Length == 3)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    ServerNodeNo[i] = Convert.ToByte(snode[i]);
-                    ClientNodeNo[i] = Convert.ToByte(cnode[i]);
+                    ServerFinsAdr[i] = Convert.ToByte(snode[i]);
+                    ClientFinsAdr[i] = Convert.ToByte(cnode[i]);
                 }
             }
         }
 
-        public byte GetFinsClientNode()
+        public byte[] GetFinsNode()
         {
-            return ClientNodeNo[1];
+            byte[] node = new byte[2];
+
+            node[0] = ClientFinsAdr[1];
+            node[1] = ServerFinsAdr[1];
+
+            return node;
 
         }
 
-        public void Connect(string TargetIp, bool TcpConnect = false)
+        public byte[] Connect(string TargetIp, string ServerFinsAddress, string ClientFinsAddress, bool TcpConnect = false)
         {
             MemoryStream ms = new MemoryStream();
+            SetFinsNode(ServerFinsAddress, ClientFinsAddress);
             useTcp = TcpConnect;
+            byte[] node = new byte[] { ClientFinsAdr[1], ServerFinsAdr[1] };
 
             if (useTcp)
             {
@@ -238,9 +245,9 @@ namespace Fins
                 ns.ReadTimeout = 1000;
                 ns.WriteTimeout = 1000;
 
-                byte[] node = GetServerFinsNodeCmd();
-                ClientNodeNo[1] = node[0];
-                ServerNodeNo[1] = node[1];
+                node = GetServerFinsNodeCmd();
+                ClientFinsAdr[1] = node[0];
+                ServerFinsAdr[1] = node[1];
 
             }
             else
@@ -250,6 +257,8 @@ namespace Fins
 
                 udp.Connect(TargetIp, TargetPort);
             }
+
+            return node;
 
         }
 
@@ -324,12 +333,12 @@ namespace Fins
             cmd[0] = 0x80;          // ICF
             cmd[1] = 0x00;          // RSV
             cmd[2] = 0x02;          // GCT
-            cmd[3] = ServerNodeNo[0];      // DNA  相手先ネットワークアドレス
-            cmd[4] = ServerNodeNo[1];      // DA1  相手先ノードアドレス
-            cmd[5] = ServerNodeNo[2];      // DA2  相手先号機アドレス
-            cmd[6] = ClientNodeNo[0];      // SNA  発信元ネットワークアドレス
-            cmd[7] = ClientNodeNo[1];      // SA1  発信元ノードアドレス
-            cmd[8] = ClientNodeNo[2];      // SA2  発信元号機アドレス
+            cmd[3] = ServerFinsAdr[0];      // DNA  相手先ネットワークアドレス
+            cmd[4] = ServerFinsAdr[1];      // DA1  相手先ノードアドレス
+            cmd[5] = ServerFinsAdr[2];      // DA2  相手先号機アドレス
+            cmd[6] = ClientFinsAdr[0];      // SNA  発信元ネットワークアドレス
+            cmd[7] = ClientFinsAdr[1];      // SA1  発信元ノードアドレス
+            cmd[8] = ClientFinsAdr[2];      // SA2  発信元号機アドレス
             cmd[9] = (byte)++sid;        // SID  識別子 00-FFの任意の数値
 
             return cmd;
@@ -460,7 +469,6 @@ namespace Fins
         public byte[] SendCommand(byte[] command)
         {
             byte[] res = null;
-            //MemoryStream ms = new MemoryStream();
 
             sbMes.Clear();
 
