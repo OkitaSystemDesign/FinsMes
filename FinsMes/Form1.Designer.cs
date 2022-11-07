@@ -34,14 +34,12 @@
             this.btnConnect = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label10 = new System.Windows.Forms.Label();
+            this.btnDirectCommand = new System.Windows.Forms.Button();
             this.txtDumpColMax = new System.Windows.Forms.TextBox();
             this.txtRes = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtCmd = new System.Windows.Forms.TextBox();
             this.btnSend = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabNone = new System.Windows.Forms.TabPage();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.txtWriteData = new System.Windows.Forms.TextBox();
             this.txtSize = new System.Windows.Forms.TextBox();
             this.txtMemAddress = new System.Windows.Forms.TextBox();
@@ -49,30 +47,21 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.cmbMemType = new System.Windows.Forms.ComboBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.txtMultiRead = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rdoMonitor = new System.Windows.Forms.RadioButton();
             this.rdoRun = new System.Windows.Forms.RadioButton();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rdoCycleTime = new System.Windows.Forms.RadioButton();
             this.rdoIni = new System.Windows.Forms.RadioButton();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.label19 = new System.Windows.Forms.Label();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
             this.txtErrCode = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.tabPage9 = new System.Windows.Forms.TabPage();
             this.txtRecSize = new System.Windows.Forms.TextBox();
             this.txtStartRec = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.btnDirectCommand = new System.Windows.Forms.Button();
             this.btnCreateSendMes = new System.Windows.Forms.Button();
             this.cmbCmd = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -84,21 +73,33 @@
             this.cmbCommType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.wizardControl1 = new FinsMes.WizardControl();
+            this.tabPage0 = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.btnDirectCmd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.wizardControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage8.SuspendLayout();
-            this.tabPage9.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            this.tabPage8.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -139,13 +140,14 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnDirectCmd);
+            this.splitContainer1.Panel1.Controls.Add(this.wizardControl1);
             this.splitContainer1.Panel1.Controls.Add(this.label10);
             this.splitContainer1.Panel1.Controls.Add(this.txtDumpColMax);
             this.splitContainer1.Panel1.Controls.Add(this.txtRes);
             this.splitContainer1.Panel1.Controls.Add(this.label8);
             this.splitContainer1.Panel1.Controls.Add(this.txtCmd);
             this.splitContainer1.Panel1.Controls.Add(this.btnSend);
-            this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel1.Controls.Add(this.btnCreateSendMes);
             this.splitContainer1.Panel1.Controls.Add(this.cmbCmd);
             this.splitContainer1.Panel1.Controls.Add(this.label15);
@@ -165,6 +167,17 @@
             this.label10.Size = new System.Drawing.Size(89, 12);
             this.label10.TabIndex = 35;
             this.label10.Text = "DUMP 表示列数";
+            // 
+            // btnDirectCommand
+            // 
+            this.btnDirectCommand.Enabled = false;
+            this.btnDirectCommand.Location = new System.Drawing.Point(500, 6);
+            this.btnDirectCommand.Name = "btnDirectCommand";
+            this.btnDirectCommand.Size = new System.Drawing.Size(98, 38);
+            this.btnDirectCommand.TabIndex = 0;
+            this.btnDirectCommand.Text = "実行";
+            this.btnDirectCommand.UseVisualStyleBackColor = true;
+            this.btnDirectCommand.Click += new System.EventHandler(this.btnDirectCommand_Click);
             // 
             // txtDumpColMax
             // 
@@ -219,53 +232,9 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabNone);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage8);
-            this.tabControl1.Controls.Add(this.tabPage9);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(5, 29);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(624, 76);
-            this.tabControl1.TabIndex = 29;
-            // 
-            // tabNone
-            // 
-            this.tabNone.Location = new System.Drawing.Point(4, 22);
-            this.tabNone.Name = "tabNone";
-            this.tabNone.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNone.Size = new System.Drawing.Size(616, 50);
-            this.tabNone.TabIndex = 4;
-            this.tabNone.UseVisualStyleBackColor = true;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.CausesValidation = false;
-            this.tabPage1.Controls.Add(this.txtWriteData);
-            this.tabPage1.Controls.Add(this.txtSize);
-            this.tabPage1.Controls.Add(this.txtMemAddress);
-            this.tabPage1.Controls.Add(this.lblWriteData);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.cmbMemType);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(616, 50);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // txtWriteData
             // 
-            this.txtWriteData.Location = new System.Drawing.Point(66, 36);
+            this.txtWriteData.Location = new System.Drawing.Point(69, 35);
             this.txtWriteData.Name = "txtWriteData";
             this.txtWriteData.Size = new System.Drawing.Size(394, 19);
             this.txtWriteData.TabIndex = 4;
@@ -273,7 +242,7 @@
             // 
             // txtSize
             // 
-            this.txtSize.Location = new System.Drawing.Point(285, 6);
+            this.txtSize.Location = new System.Drawing.Point(288, 5);
             this.txtSize.Name = "txtSize";
             this.txtSize.Size = new System.Drawing.Size(58, 19);
             this.txtSize.TabIndex = 2;
@@ -281,7 +250,7 @@
             // 
             // txtMemAddress
             // 
-            this.txtMemAddress.Location = new System.Drawing.Point(110, 6);
+            this.txtMemAddress.Location = new System.Drawing.Point(113, 5);
             this.txtMemAddress.Name = "txtMemAddress";
             this.txtMemAddress.Size = new System.Drawing.Size(100, 19);
             this.txtMemAddress.TabIndex = 1;
@@ -290,7 +259,7 @@
             // lblWriteData
             // 
             this.lblWriteData.AutoSize = true;
-            this.lblWriteData.Location = new System.Drawing.Point(3, 39);
+            this.lblWriteData.Location = new System.Drawing.Point(6, 38);
             this.lblWriteData.Name = "lblWriteData";
             this.lblWriteData.Size = new System.Drawing.Size(57, 12);
             this.lblWriteData.TabIndex = 5;
@@ -299,7 +268,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(238, 9);
+            this.label5.Location = new System.Drawing.Point(241, 8);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 12);
             this.label5.TabIndex = 3;
@@ -308,7 +277,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 9);
+            this.label9.Location = new System.Drawing.Point(6, 8);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 12);
             this.label9.TabIndex = 4;
@@ -317,25 +286,14 @@
             // cmbMemType
             // 
             this.cmbMemType.FormattingEnabled = true;
-            this.cmbMemType.Location = new System.Drawing.Point(50, 6);
+            this.cmbMemType.Location = new System.Drawing.Point(53, 5);
             this.cmbMemType.Name = "cmbMemType";
             this.cmbMemType.Size = new System.Drawing.Size(54, 20);
             this.cmbMemType.TabIndex = 0;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.txtMultiRead);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(616, 50);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // txtMultiRead
             // 
-            this.txtMultiRead.Location = new System.Drawing.Point(93, 6);
+            this.txtMultiRead.Location = new System.Drawing.Point(93, 5);
             this.txtMultiRead.Name = "txtMultiRead";
             this.txtMultiRead.Size = new System.Drawing.Size(377, 19);
             this.txtMultiRead.TabIndex = 0;
@@ -344,27 +302,17 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 9);
+            this.label7.Location = new System.Drawing.Point(6, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(81, 12);
             this.label7.TabIndex = 6;
             this.label7.Text = "複合読出データ";
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.groupBox1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(616, 50);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.rdoMonitor);
             this.groupBox1.Controls.Add(this.rdoRun);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Location = new System.Drawing.Point(6, 8);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(437, 38);
             this.groupBox1.TabIndex = 0;
@@ -393,21 +341,11 @@
             this.rdoRun.Text = "運転";
             this.rdoRun.UseVisualStyleBackColor = true;
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.groupBox2);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(616, 50);
-            this.tabPage5.TabIndex = 5;
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.rdoCycleTime);
             this.groupBox2.Controls.Add(this.rdoIni);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Location = new System.Drawing.Point(6, 8);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(328, 35);
             this.groupBox2.TabIndex = 0;
@@ -435,39 +373,18 @@
             this.rdoIni.Text = "イニシャライズ";
             this.rdoIni.UseVisualStyleBackColor = true;
             // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.label19);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(616, 50);
-            this.tabPage6.TabIndex = 6;
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(33, 15);
+            this.label19.Location = new System.Drawing.Point(6, 8);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(150, 12);
             this.label19.TabIndex = 0;
             this.label19.Text = "PCの現在時刻を書き込みます";
             // 
-            // tabPage8
-            // 
-            this.tabPage8.Controls.Add(this.txtErrCode);
-            this.tabPage8.Controls.Add(this.label6);
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(616, 50);
-            this.tabPage8.TabIndex = 8;
-            this.tabPage8.UseVisualStyleBackColor = true;
-            // 
             // txtErrCode
             // 
-            this.txtErrCode.Location = new System.Drawing.Point(68, 7);
+            this.txtErrCode.Location = new System.Drawing.Point(68, 5);
             this.txtErrCode.Name = "txtErrCode";
             this.txtErrCode.Size = new System.Drawing.Size(43, 19);
             this.txtErrCode.TabIndex = 1;
@@ -476,28 +393,15 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 10);
+            this.label6.Location = new System.Drawing.Point(6, 8);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(56, 12);
             this.label6.TabIndex = 0;
             this.label6.Text = "故障コード";
             // 
-            // tabPage9
-            // 
-            this.tabPage9.Controls.Add(this.txtRecSize);
-            this.tabPage9.Controls.Add(this.txtStartRec);
-            this.tabPage9.Controls.Add(this.label18);
-            this.tabPage9.Controls.Add(this.label17);
-            this.tabPage9.Location = new System.Drawing.Point(4, 22);
-            this.tabPage9.Name = "tabPage9";
-            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(616, 50);
-            this.tabPage9.TabIndex = 9;
-            this.tabPage9.UseVisualStyleBackColor = true;
-            // 
             // txtRecSize
             // 
-            this.txtRecSize.Location = new System.Drawing.Point(216, 6);
+            this.txtRecSize.Location = new System.Drawing.Point(216, 5);
             this.txtRecSize.Name = "txtRecSize";
             this.txtRecSize.Size = new System.Drawing.Size(44, 19);
             this.txtRecSize.TabIndex = 3;
@@ -505,7 +409,7 @@
             // 
             // txtStartRec
             // 
-            this.txtStartRec.Location = new System.Drawing.Point(91, 6);
+            this.txtStartRec.Location = new System.Drawing.Point(91, 5);
             this.txtStartRec.Name = "txtStartRec";
             this.txtStartRec.Size = new System.Drawing.Size(41, 19);
             this.txtStartRec.TabIndex = 1;
@@ -514,7 +418,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(157, 9);
+            this.label18.Location = new System.Drawing.Point(157, 8);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(53, 12);
             this.label18.TabIndex = 2;
@@ -523,42 +427,11 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 9);
+            this.label17.Location = new System.Drawing.Point(6, 8);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(79, 12);
             this.label17.TabIndex = 0;
             this.label17.Text = "開始レコードNo";
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.btnDirectCommand);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(616, 50);
-            this.tabPage3.TabIndex = 10;
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(30, 14);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(287, 12);
-            this.label11.TabIndex = 1;
-            this.label11.Text = "FinsMessageクラスのメソッドを連続して送信してテストします";
-            // 
-            // btnDirectCommand
-            // 
-            this.btnDirectCommand.Enabled = false;
-            this.btnDirectCommand.Location = new System.Drawing.Point(393, 6);
-            this.btnDirectCommand.Name = "btnDirectCommand";
-            this.btnDirectCommand.Size = new System.Drawing.Size(127, 30);
-            this.btnDirectCommand.TabIndex = 0;
-            this.btnDirectCommand.Text = "連続メソッドテスト";
-            this.btnDirectCommand.UseVisualStyleBackColor = true;
-            this.btnDirectCommand.Click += new System.EventHandler(this.btnDirectCommand_Click);
             // 
             // btnCreateSendMes
             // 
@@ -664,6 +537,153 @@
             this.label12.TabIndex = 12;
             this.label12.Text = "FINSアドレス";
             // 
+            // wizardControl1
+            // 
+            this.wizardControl1.Controls.Add(this.tabPage0);
+            this.wizardControl1.Controls.Add(this.tabPage1);
+            this.wizardControl1.Controls.Add(this.tabPage2);
+            this.wizardControl1.Controls.Add(this.tabPage3);
+            this.wizardControl1.Controls.Add(this.tabPage4);
+            this.wizardControl1.Controls.Add(this.tabPage5);
+            this.wizardControl1.Controls.Add(this.tabPage6);
+            this.wizardControl1.Controls.Add(this.tabPage7);
+            this.wizardControl1.Controls.Add(this.tabPage8);
+            this.wizardControl1.Location = new System.Drawing.Point(11, 29);
+            this.wizardControl1.Name = "wizardControl1";
+            this.wizardControl1.SelectedIndex = 0;
+            this.wizardControl1.Size = new System.Drawing.Size(622, 76);
+            this.wizardControl1.TabIndex = 36;
+            // 
+            // tabPage0
+            // 
+            this.tabPage0.Location = new System.Drawing.Point(4, 22);
+            this.tabPage0.Name = "tabPage0";
+            this.tabPage0.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage0.Size = new System.Drawing.Size(614, 50);
+            this.tabPage0.TabIndex = 0;
+            this.tabPage0.Text = "tabPage0";
+            this.tabPage0.UseVisualStyleBackColor = true;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.txtWriteData);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.txtSize);
+            this.tabPage1.Controls.Add(this.cmbMemType);
+            this.tabPage1.Controls.Add(this.txtMemAddress);
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.lblWriteData);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(614, 50);
+            this.tabPage1.TabIndex = 1;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtMultiRead);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(614, 50);
+            this.tabPage2.TabIndex = 2;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.groupBox1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(614, 50);
+            this.tabPage3.TabIndex = 3;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.groupBox2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(614, 50);
+            this.tabPage4.TabIndex = 4;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.label19);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(614, 50);
+            this.tabPage5.TabIndex = 5;
+            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.txtErrCode);
+            this.tabPage6.Controls.Add(this.label6);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(614, 50);
+            this.tabPage6.TabIndex = 6;
+            this.tabPage6.Text = "tabPage6";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.txtRecSize);
+            this.tabPage7.Controls.Add(this.label17);
+            this.tabPage7.Controls.Add(this.txtStartRec);
+            this.tabPage7.Controls.Add(this.label18);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(614, 50);
+            this.tabPage7.TabIndex = 7;
+            this.tabPage7.Text = "tabPage7";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.label11);
+            this.tabPage8.Controls.Add(this.btnDirectCommand);
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(614, 50);
+            this.tabPage8.TabIndex = 8;
+            this.tabPage8.Text = "tabPage8";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 6);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(414, 48);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Readコマンド、Writeコマンドなどを連続して送信します\r\n実行すると以下のコマンドを実行するので注意してください\r\n\r\nPLCのリセット、D1000～D19" +
+    "99に値を書込み、異常リセット、異常クリア、時刻の書込み";
+            // 
+            // btnDirectCmd
+            // 
+            this.btnDirectCmd.Location = new System.Drawing.Point(502, 3);
+            this.btnDirectCmd.Name = "btnDirectCmd";
+            this.btnDirectCmd.Size = new System.Drawing.Size(127, 24);
+            this.btnDirectCmd.TabIndex = 2;
+            this.btnDirectCmd.Text = "ダイレクトコマンド";
+            this.btnDirectCmd.UseVisualStyleBackColor = true;
+            this.btnDirectCmd.Click += new System.EventHandler(this.btnDirectCmd_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -691,25 +711,25 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.wizardControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabPage5.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.tabPage5.PerformLayout();
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.tabPage8.ResumeLayout(false);
             this.tabPage8.PerformLayout();
-            this.tabPage9.ResumeLayout(false);
-            this.tabPage9.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -733,9 +753,6 @@
         private System.Windows.Forms.TextBox txtRes;
         private System.Windows.Forms.TextBox txtLineMonitor;
         private System.Windows.Forms.ComboBox cmbCommType;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabNone;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TextBox txtWriteData;
         private System.Windows.Forms.TextBox txtSize;
         private System.Windows.Forms.TextBox txtMemAddress;
@@ -743,34 +760,38 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox cmbMemType;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox txtMultiRead;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rdoMonitor;
         private System.Windows.Forms.RadioButton rdoRun;
-        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rdoCycleTime;
         private System.Windows.Forms.RadioButton rdoIni;
-        private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.TabPage tabPage8;
         private System.Windows.Forms.TextBox txtErrCode;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TabPage tabPage9;
         private System.Windows.Forms.TextBox txtRecSize;
         private System.Windows.Forms.TextBox txtStartRec;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox txtDumpColMax;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnDirectCommand;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label12;
+        private WizardControl wizardControl1;
+        private System.Windows.Forms.TabPage tabPage0;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.Button btnDirectCmd;
+        private System.Windows.Forms.Label label11;
     }
 }
 

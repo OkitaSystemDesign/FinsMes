@@ -30,9 +30,8 @@ namespace Osd.Omron
         private Int32 TargetPort = 9600;
         static byte sid = 0;
 
-        private byte[] ClientFinsAdr = new byte[] { 0, 0, 0 };
-        private byte[] ServerFinsAdr = new byte[] { 0, 0, 0 };
-
+        public byte[] ClientFinsAddress = new byte[] { 0, 0, 0 };
+        public byte[] ServerFinsAddress = new byte[] { 0, 0, 0 };
         public bool useTcp = false;
 
         StringBuilder sbMes = new StringBuilder();
@@ -64,171 +63,144 @@ namespace Osd.Omron
             }
         }
 
-
         private string FinsExceptionMessage(byte[] EndCode)
         {
-            string Message = "";
+            string Message = "FinsEndCode=";
             short Code = (short)(EndCode[0] * 0x100 + EndCode[1]);
 
+
             if (Code == 0x0101)
-                Message = Convert.ToString(Code, 16) + ": Local node not in network (自ノード ネットワーク未加入)";
+                Message += Convert.ToString(Code, 16) + ": Local node not in network (自ノード ネットワーク未加入)";
             else if (Code == 0x0102)
-                Message = Convert.ToString(Code, 16) + ": Token timeout (トークン タイムアウト)";
+                Message += Convert.ToString(Code, 16) + ": Token timeout (トークン タイムアウト)";
             else if (Code == 0x0103)
-                Message = Convert.ToString(Code, 16) + ": Retries failed (再送オーバー)";
+                Message += Convert.ToString(Code, 16) + ": Retries failed (再送オーバー)";
             else if (Code == 0x0104)
-                Message = Convert.ToString(Code, 16) + ": Too many send frames (送信許可フレーム数オーバー)";
+                Message += Convert.ToString(Code, 16) + ": Too many send frames (送信許可フレーム数オーバー)";
             else if (Code == 0x0105)
-                Message = Convert.ToString(Code, 16) + ": Node address range error (ノードアドレス設定範囲エラー)";
+                Message += Convert.ToString(Code, 16) + ": Node address range error (ノードアドレス設定範囲エラー)";
             else if (Code == 0x0106)
-                Message = Convert.ToString(Code, 16) + ": Node address duplication (ノードアドレス二重設定エラー)";
+                Message += Convert.ToString(Code, 16) + ": Node address duplication (ノードアドレス二重設定エラー)";
             else if (Code == 0x0201)
-                Message = Convert.ToString(Code, 16) + ": Destination node not in network (相手ノード ネットワーク未加入)";
+                Message += Convert.ToString(Code, 16) + ": Destination node not in network (相手ノード ネットワーク未加入)";
             else if (Code == 0x0202)
-                Message = Convert.ToString(Code, 16) + ": Unit missing (該当ユニットなし)";
+                Message += Convert.ToString(Code, 16) + ": Unit missing (該当ユニットなし)";
             else if (Code == 0x0203)
-                Message = Convert.ToString(Code, 16) + ": Third node missing (第三ノード ネットワーク未加入)";
+                Message += Convert.ToString(Code, 16) + ": Third node missing (第三ノード ネットワーク未加入)";
             else if (Code == 0x0204)
-                Message = Convert.ToString(Code, 16) + ": Destination node busy (相手ノード ビジー)";
+                Message += Convert.ToString(Code, 16) + ": Destination node busy (相手ノード ビジー)";
             else if (Code == 0x0205)
-                Message = Convert.ToString(Code, 16) + ": Response timeout (レスポンス タイムアウト)";
+                Message += Convert.ToString(Code, 16) + ": Response timeout (レスポンス タイムアウト)";
             else if (Code == 0x0301)
-                Message = Convert.ToString(Code, 16) + ": Communications controller error (通信コントローラ異常)";
+                Message += Convert.ToString(Code, 16) + ": Communications controller error (通信コントローラ異常)";
             else if (Code == 0x0302)
-                Message = Convert.ToString(Code, 16) + ": CPU Unit error (CPUユニット異常)";
+                Message += Convert.ToString(Code, 16) + ": CPU Unit error (CPUユニット異常)";
             else if (Code == 0x0303)
-                Message = Convert.ToString(Code, 16) + ": Controller error (該当コントローラ異常)";
+                Message += Convert.ToString(Code, 16) + ": Controller error (該当コントローラ異常)";
             else if (Code == 0x0304)
-                Message = Convert.ToString(Code, 16) + ": Unit number error (ユニット番号設定異常)";
+                Message += Convert.ToString(Code, 16) + ": Unit number error (ユニット番号設定異常)";
             else if (Code == 0x0401)
-                Message = Convert.ToString(Code, 16) + ": Undefined command (未定義コマンド)";
+                Message += Convert.ToString(Code, 16) + ": Undefined command (未定義コマンド)";
             else if (Code == 0x0402)
-                Message = Convert.ToString(Code, 16) + ": Not supported by model/version (サポート外機種/バージョン)";
+                Message += Convert.ToString(Code, 16) + ": Not supported by model/version (サポート外機種/バージョン)";
             else if (Code == 0x0501)
-                Message = Convert.ToString(Code, 16) + ": Destination address setting error (相手アドレス設定エラー)";
+                Message += Convert.ToString(Code, 16) + ": Destination address setting error (相手アドレス設定エラー)";
             else if (Code == 0x0502)
-                Message = Convert.ToString(Code, 16) + ": No routing tables (ルーチングテーブル未登録)";
+                Message += Convert.ToString(Code, 16) + ": No routing tables (ルーチングテーブル未登録)";
             else if (Code == 0x0503)
-                Message = Convert.ToString(Code, 16) + ": Routing table error (ルーチングテーブル異常)";
+                Message += Convert.ToString(Code, 16) + ": Routing table error (ルーチングテーブル異常)";
             else if (Code == 0x0504)
-                Message = Convert.ToString(Code, 16) + ": oo many relays (中継回数オーバー)";
+                Message += Convert.ToString(Code, 16) + ": oo many relays (中継回数オーバー)";
             else if (Code == 0x1001)
-                Message = Convert.ToString(Code, 16) + ": Command too long (コマンド長オーバー)";
+                Message += Convert.ToString(Code, 16) + ": Command too long (コマンド長オーバー)";
             else if (Code == 0x1002)
-                Message = Convert.ToString(Code, 16) + ": Command too short (コマンド長不足)";
+                Message += Convert.ToString(Code, 16) + ": Command too short (コマンド長不足)";
             else if (Code == 0x1003)
-                Message = Convert.ToString(Code, 16) + ": Elements/data don’t match (要素数/データ数不一致)";
+                Message += Convert.ToString(Code, 16) + ": Elements/data don’t match (要素数/データ数不一致)";
             else if (Code == 0x1004)
-                Message = Convert.ToString(Code, 16) + ": Command format error (コマンドフォーマットエラー)";
+                Message += Convert.ToString(Code, 16) + ": Command format error (コマンドフォーマットエラー)";
             else if (Code == 0x1005)
-                Message = Convert.ToString(Code, 16) + ": Header error (ヘッダ異常)";
+                Message += Convert.ToString(Code, 16) + ": Header error (ヘッダ異常)";
             else if (Code == 0x1101)
-                Message = Convert.ToString(Code, 16) + ": Area classification missing (エリア種別なし)";
+                Message += Convert.ToString(Code, 16) + ": Area classification missing (エリア種別なし)";
             else if (Code == 0x1102)
-                Message = Convert.ToString(Code, 16) + ": Access size error (アクセスサイズエラー)";
+                Message += Convert.ToString(Code, 16) + ": Access size error (アクセスサイズエラー)";
             else if (Code == 0x1103)
-                Message = Convert.ToString(Code, 16) + ": Address range error (アドレス範囲外指定エラー)";
+                Message += Convert.ToString(Code, 16) + ": Address range error (アドレス範囲外指定エラー)";
             else if (Code == 0x1104)
-                Message = Convert.ToString(Code, 16) + ": Address range exceeded (アドレス範囲オーバー)";
+                Message += Convert.ToString(Code, 16) + ": Address range exceeded (アドレス範囲オーバー)";
             else if (Code == 0x1106)
-                Message = Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x1109)
-                Message = Convert.ToString(Code, 16) + ": Relational error (相関関係エラー)";
+                Message += Convert.ToString(Code, 16) + ": Relational error (相関関係エラー)";
             else if (Code == 0x110A)
-                Message = Convert.ToString(Code, 16) + ": Duplicate data access (データ重複エラー)";
+                Message += Convert.ToString(Code, 16) + ": Duplicate data access (データ重複エラー)";
             else if (Code == 0x110B)
-                Message = Convert.ToString(Code, 16) + ": Response too long (レスポンス長オーバー)";
+                Message += Convert.ToString(Code, 16) + ": Response too long (レスポンス長オーバー)";
             else if (Code == 0x110C)
-                Message = Convert.ToString(Code, 16) + ": Parameter error (パラメータエラー)";
+                Message += Convert.ToString(Code, 16) + ": Parameter error (パラメータエラー)";
             else if (Code == 0x2002)
-                Message = Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
+                Message += Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
             else if (Code == 0x2003)
-                Message = Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
+                Message += Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
             else if (Code == 0x2004)
-                Message = Convert.ToString(Code, 16) + ": Data missing (検索データなし)";
+                Message += Convert.ToString(Code, 16) + ": Data missing (検索データなし)";
             else if (Code == 0x2005)
-                Message = Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x2006)
-                Message = Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
+                Message += Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
             else if (Code == 0x2007)
-                Message = Convert.ToString(Code, 16) + ": Data mismatch (照合異常)";
+                Message += Convert.ToString(Code, 16) + ": Data mismatch (照合異常)";
             else if (Code == 0x2101)
-                Message = Convert.ToString(Code, 16) + ": Read-only (リードオンリー)";
+                Message += Convert.ToString(Code, 16) + ": Read-only (リードオンリー)";
             else if (Code == 0x2102)
-                Message = Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
+                Message += Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
             else if (Code == 0x2103)
-                Message = Convert.ToString(Code, 16) + ": Cannot register (登録不可)";
+                Message += Convert.ToString(Code, 16) + ": Cannot register (登録不可)";
             else if (Code == 0x2105)
-                Message = Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x2106)
-                Message = Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
+                Message += Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
             else if (Code == 0x2107)
-                Message = Convert.ToString(Code, 16) + ": File name already exists (同一ファイル名あり)";
+                Message += Convert.ToString(Code, 16) + ": File name already exists (同一ファイル名あり)";
             else if (Code == 0x2108)
-                Message = Convert.ToString(Code, 16) + ": Cannot change (変更不可)";
+                Message += Convert.ToString(Code, 16) + ": Cannot change (変更不可)";
             else if (Code == 0x2201)
-                Message = Convert.ToString(Code, 16) + ": Not possible during execution (運転中のため動作不可)";
+                Message += Convert.ToString(Code, 16) + ": Not possible during execution (運転中のため動作不可)";
             else if (Code == 0x2202)
-                Message = Convert.ToString(Code, 16) + ": Not possible while running (停止中)";
+                Message += Convert.ToString(Code, 16) + ": Not possible while running (停止中)";
             else if (Code == 0x2203)
-                Message = Convert.ToString(Code, 16) + ": Wrong PLC mode, PROGRAM mode (本体モードが違う プログラムモード)";
+                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, PROGRAM mode (本体モードが違う プログラムモード)";
             else if (Code == 0x2204)
-                Message = Convert.ToString(Code, 16) + ": Wrong PLC mode, DEBUG mode (本体モードが違う デバッグモード)";
+                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, DEBUG mode (本体モードが違う デバッグモード)";
             else if (Code == 0x2205)
-                Message = Convert.ToString(Code, 16) + ": Wrong PLC mode, MONITOR mode (本体モードが違う モニタモード)";
+                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, MONITOR mode (本体モードが違う モニタモード)";
             else if (Code == 0x2206)
-                Message = Convert.ToString(Code, 16) + ": Wrong PLC mode, RUN mode (本体モードが違う 運転モード)";
+                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, RUN mode (本体モードが違う 運転モード)";
             else if (Code == 0x2207)
-                Message = Convert.ToString(Code, 16) + ": Specified node not polling node (指定ノードが管理局でない)";
+                Message += Convert.ToString(Code, 16) + ": Specified node not polling node (指定ノードが管理局でない)";
             else if (Code == 0x2208)
-                Message = Convert.ToString(Code, 16) + ": Step cannot be executed (ステップが実行不可)";
+                Message += Convert.ToString(Code, 16) + ": Step cannot be executed (ステップが実行不可)";
             else if (Code == 0x2301)
-                Message = Convert.ToString(Code, 16) + ": File device missing (ファイル装置なし)";
+                Message += Convert.ToString(Code, 16) + ": File device missing (ファイル装置なし)";
             else if (Code == 0x2302)
-                Message = Convert.ToString(Code, 16) + ": Memory missing (該当メモリなし)";
+                Message += Convert.ToString(Code, 16) + ": Memory missing (該当メモリなし)";
             else if (Code == 0x2303)
-                Message = Convert.ToString(Code, 16) + ": Clock missing (時計なし)";
+                Message += Convert.ToString(Code, 16) + ": Clock missing (時計なし)";
             else if (Code == 0x2401)
-                Message = Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
+                Message += Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
             else
-                Message = "FINS END CODE = " + Convert.ToString(Code, 16);
+                Message += "FINS END CODE = " + Convert.ToString(Code, 16);
 
 
             return Message;
         }
 
-        private void SetFinsNode(string ServerFinsAddress, string ClientFinsAddress)
-        {
-            string[] snode = ServerFinsAddress.Split('.');
-            string[] cnode = ClientFinsAddress.Split('.');
-
-            if (snode.Length == 3 && cnode.Length == 3)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    ServerFinsAdr[i] = Convert.ToByte(snode[i]);
-                    ClientFinsAdr[i] = Convert.ToByte(cnode[i]);
-                }
-            }
-        }
-
-        public byte[] GetFinsNode()
-        {
-            byte[] node = new byte[2];
-
-            node[0] = ClientFinsAdr[1];
-            node[1] = ServerFinsAdr[1];
-
-            return node;
-
-        }
-
-        public byte[] Connect(string TargetIp, string ServerFinsAddress, string ClientFinsAddress, bool TcpConnect = false)
+        public byte[] Connect(string TargetIp, bool TcpConnect = false)
         {
             MemoryStream ms = new MemoryStream();
-            SetFinsNode(ServerFinsAddress, ClientFinsAddress);
             useTcp = TcpConnect;
-            byte[] node = new byte[] { ClientFinsAdr[1], ServerFinsAdr[1] };
+            byte[] node = new byte[] { ClientFinsAddress[1], ServerFinsAddress[1] };
 
             if (useTcp)
             {
@@ -246,8 +218,8 @@ namespace Osd.Omron
                 ns.WriteTimeout = 1000;
 
                 node = GetServerFinsNodeCmd();
-                ClientFinsAdr[1] = node[0];
-                ServerFinsAdr[1] = node[1];
+                ClientFinsAddress[1] = node[0];
+                ServerFinsAddress[1] = node[1];
 
             }
             else
@@ -333,12 +305,12 @@ namespace Osd.Omron
             cmd[0] = 0x80;          // ICF
             cmd[1] = 0x00;          // RSV
             cmd[2] = 0x02;          // GCT
-            cmd[3] = ServerFinsAdr[0];      // DNA  相手先ネットワークアドレス
-            cmd[4] = ServerFinsAdr[1];      // DA1  相手先ノードアドレス
-            cmd[5] = ServerFinsAdr[2];      // DA2  相手先号機アドレス
-            cmd[6] = ClientFinsAdr[0];      // SNA  発信元ネットワークアドレス
-            cmd[7] = ClientFinsAdr[1];      // SA1  発信元ノードアドレス
-            cmd[8] = ClientFinsAdr[2];      // SA2  発信元号機アドレス
+            cmd[3] = ServerFinsAddress[0];      // DNA  相手先ネットワークアドレス
+            cmd[4] = ServerFinsAddress[1];      // DA1  相手先ノードアドレス
+            cmd[5] = ServerFinsAddress[2];      // DA2  相手先号機アドレス
+            cmd[6] = ClientFinsAddress[0];      // SNA  発信元ネットワークアドレス
+            cmd[7] = ClientFinsAddress[1];      // SA1  発信元ノードアドレス
+            cmd[8] = ClientFinsAddress[2];      // SA2  発信元号機アドレス
             cmd[9] = (byte)++sid;        // SID  識別子 00-FFの任意の数値
 
             return cmd;
@@ -429,7 +401,6 @@ namespace Osd.Omron
             byte[] res = null;
             MemoryStream ms = new MemoryStream();
 
-            //sbMes.Clear();
             sbMes.Append("[TCP]-> " + BitConverter.ToString(cmd) + "\r\n");
 
             ns.Write(cmd, 0, cmd.Length);
@@ -452,7 +423,6 @@ namespace Osd.Omron
             ms.Close();
 
             sbMes.Append("[TCP]<- " + BitConverter.ToString(res) + "\r\n");
-            Console.WriteLine(res.Length);
 
             byte[] endcode = new byte[2];
             Array.Copy(res, 28, endcode, 0, 2);
@@ -929,8 +899,6 @@ namespace Osd.Omron
         public void ErrorLogClear()
         {
             sbMes.Clear();
-
-            //DateTime dt = DateTime.Now;
 
             byte[] finscmd = new byte[2];
             finscmd[0] = 0x21;

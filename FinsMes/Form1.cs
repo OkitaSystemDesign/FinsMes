@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 namespace FinsMes
 {
+
+
     public partial class Form1 : Form
     {
         private bool connected = false;
@@ -59,7 +61,6 @@ namespace FinsMes
             src.Add(new ItemSet(0x2101, "2101 異常解除"));
             src.Add(new ItemSet(0x2102, "2102 異常履歴"));
             src.Add(new ItemSet(0x2103, "2103 異常履歴クリア"));
-            src.Add(new ItemSet(0x0000, "---- メソッドテスト"));
             cmbCmd.DataSource = src;
             cmbCmd.DisplayMember = "Name";
             cmbCmd.ValueMember = "Value";
@@ -103,9 +104,7 @@ namespace FinsMes
             cmbMemType.ValueMember = "Value";
             cmbMemType.SelectedIndex = 0;
 
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SelectedIndex = 1;
+            wizardControl1.SelectedIndex = 1;
             lblWriteData.Visible = false;
             txtWriteData.Visible = false;
 
@@ -145,7 +144,7 @@ namespace FinsMes
                     finscmd = new byte[8];
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
                     finscmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
-                    address = AddressArray(txtMemAddress.Text);
+                    address = MemoryAddressArray(txtMemAddress.Text);
                     Array.Copy(address, 0, finscmd, 3, 3);
                     memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
                     Array.Copy(memsize, 0, finscmd, 6, memsize.Length);
@@ -159,7 +158,7 @@ namespace FinsMes
 
                     Array.Copy(cmdcode, 0, finscmd, 0, 2);
                     finscmd[2] = Convert.ToByte(cmbMemType.SelectedValue);
-                    address = AddressArray(txtMemAddress.Text);
+                    address = MemoryAddressArray(txtMemAddress.Text);
                     Array.Copy(address, 0, finscmd, 3, 3);
                     memsize = BitConverter.GetBytes(short.Parse(txtSize.Text)).Reverse().ToArray();
                     Array.Copy(memsize, 0, finscmd, 6, memsize.Length);
@@ -271,6 +270,9 @@ namespace FinsMes
 
         private void btnCreateFinsCommand_Click(object sender, EventArgs e)
         {
+            if (!(fins.useTcp && fins.ClientFinsAddress[1] >= 0xEF && fins.ClientFinsAddress[1] <=0xFE))
+                SetFinsNode(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
+
             byte[] finscmd = CreateFinsCmd();
             if (finscmd != null)
             {
@@ -285,19 +287,19 @@ namespace FinsMes
             switch (cmbCmd.SelectedValue)
             {
                 case 0x0101:
-                    tabControl1.SelectedIndex = 1;
+                    wizardControl1.SelectedIndex = 1;
                     lblWriteData.Visible = false;
                     txtWriteData.Visible = false;
                     break;
 
                 case 0x0102:
-                    tabControl1.SelectedIndex = 1;
+                    wizardControl1.SelectedIndex = 1;
                     lblWriteData.Visible = true;
                     txtWriteData.Visible = true;
                     break;
 
                 case 0x0103:
-                    tabControl1.SelectedIndex = 1;
+                    wizardControl1.SelectedIndex = 1;
                     lblWriteData.Visible = true;
                     txtWriteData.Visible = true;
 
@@ -308,56 +310,52 @@ namespace FinsMes
                     break;
 
                 case 0x0104:
-                    tabControl1.SelectedIndex = 2;
+                    wizardControl1.SelectedIndex = 2;
                     break;
 
                 case 0x0401:
-                    tabControl1.SelectedIndex = 3;
+                    wizardControl1.SelectedIndex = 3;
                     break;
 
                 case 0x0402:
-                    tabControl1.SelectedIndex = 0;
+                    wizardControl1.SelectedIndex = 0;
                     break;
 
                 case 0x0501:
-                    tabControl1.SelectedIndex = 0;
+                    wizardControl1.SelectedIndex = 0;
                     break;
 
                 case 0x0601:
-                    tabControl1.SelectedIndex = 0;
+                    wizardControl1.SelectedIndex = 0;
                     break;
 
                 case 0x0620:
-                    tabControl1.SelectedIndex = 4;
+                    wizardControl1.SelectedIndex = 4;
                     break;
 
                 case 0x0701:
-                    tabControl1.SelectedIndex = 0;
+                    wizardControl1.SelectedIndex = 0;
                     break;
 
                 case 0x0702:
-                    tabControl1.SelectedIndex = 5;
+                    wizardControl1.SelectedIndex = 5;
                     break;
 
                 case 0x2101:
-                    tabControl1.SelectedIndex = 6;
+                    wizardControl1.SelectedIndex = 6;
                     break;
 
                 case 0x2102:
-                    tabControl1.SelectedIndex = 7;
+                    wizardControl1.SelectedIndex = 7;
                     break;
 
                 case 0x2103:
-                    tabControl1.SelectedIndex = 0;
-                    break;
-
-                case 0x0000:
-                    tabControl1.SelectedIndex = 8;
+                    wizardControl1.SelectedIndex = 0;
                     break;
             }
         }
 
-        private byte[] AddressArray(string adr)
+        private byte[] MemoryAddressArray(string adr)
         {
             byte[] bytes = new byte[3];
             if (adr.IndexOf('.') == -1)
@@ -377,6 +375,21 @@ namespace FinsMes
             return bytes;
         }
 
+        private void SetFinsNode(string SvFinsAdr, string ClFinsAdr)
+        {
+            string[] snode = SvFinsAdr.Split('.');
+            string[] cnode = ClFinsAdr.Split('.');
+
+            if (snode.Length == 3 && cnode.Length == 3)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    fins.ServerFinsAddress[i] = Convert.ToByte(snode[i]);
+                    fins.ClientFinsAddress[i] = Convert.ToByte(cnode[i]);
+                }
+            }
+        }
+
         private void connect(bool value)
         {
             connected = value;
@@ -391,13 +404,9 @@ namespace FinsMes
             btnDirectCommand.Enabled = value;
 
             if (value)
-            {
                 btnConnect.BackColor = Color.Yellow;
-            }
             else
-            {
                 btnConnect.BackColor = SystemColors.Control;
-            }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -408,7 +417,6 @@ namespace FinsMes
                 {
                     connect(false);
                     fins.Close();
-
                 }
                 else
                 {
@@ -418,7 +426,7 @@ namespace FinsMes
                     else
                         TcpConnect = true;
 
-                    byte[] FinsNode = fins.Connect(txtTargetIP.Text, txtFinsTargetAdr.Text, txtFinsSrcAdr.Text, TcpConnect);
+                    byte[] FinsNode = fins.Connect(txtTargetIP.Text, TcpConnect);
 
                     txtLineMonitor.AppendText(fins.MessageLog);
 
@@ -465,10 +473,12 @@ namespace FinsMes
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            if (txtCmd.Text == "")
+                return;
+
             try
             {
                 byte[] senddata = CommandTextToBytes(txtCmd.Text);
-                Console.WriteLine(BitConverter.ToString(senddata));
 
                 DumpColMax = int.Parse(txtDumpColMax.Text);
                 txtRes.AppendText("-->> Send\r\n" + Dump.Execute(senddata, DumpColMax) + "\r\n\r\n");
@@ -476,7 +486,6 @@ namespace FinsMes
                 byte[] res = fins.SendCommand(senddata);
 
                 txtRes.AppendText("<<-- Recive\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
-                Console.WriteLine(BitConverter.ToString(senddata));
 
                 txtLineMonitor.AppendText(fins.MessageLog);
 
@@ -639,21 +648,39 @@ namespace FinsMes
 
         private void btnDirectCommand_Click(object sender, EventArgs e)
         {
-            DirectCommandTest();
+            DialogResult result = MessageBox.Show(
+                "PLCのリセット、D1000～D1999に値を書込み、異常リセット、異常クリア、時刻の書込みを実行します\r\nよろしいですか？", 
+                "注意", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+                return;
+
+            if (!(fins.useTcp && fins.ClientFinsAddress[1] >= 0xEF && fins.ClientFinsAddress[1] <= 0xFE))
+                SetFinsNode(txtFinsTargetAdr.Text, txtFinsSrcAdr.Text);
+
+            try
+            {
+                DirectCommandTest();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                connect(false);
+            }
         }
 
         private void cmbCommType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbCommType.SelectedIndex == 0)
-            {
                 fins.useTcp = false;
-            }
             else
-            {
                 fins.useTcp = true;
-            }
 
             txtCmd.Clear();
+        }
+
+        private void btnDirectCmd_Click(object sender, EventArgs e)
+        {
+            wizardControl1.SelectedIndex = 8;
         }
     }
 }
