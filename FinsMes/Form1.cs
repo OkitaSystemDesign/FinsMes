@@ -569,12 +569,12 @@ namespace FinsMes
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // ErrorClear 0x2101
-            fins.ErrorClear();
+            fins.ErrorClear(new byte[2] { 0xFF, 0xFF });
             txtRes.AppendText("<ErrorClear Command>\r\n" + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
             // ErrorLogRead 0x2102
-            res = fins.ErrorLogRead();
+            res = fins.ErrorLogRead(0, 20);
             txtRes.AppendText("<ErrorLogRead Command>\r\n" + Dump.Execute(res, DumpColMax) + "\r\n\r\n");
             txtLineMonitor.AppendText(fins.MessageLog);
 
@@ -593,9 +593,10 @@ namespace FinsMes
             txtRes.AppendText("----- Convert ReadData -----\r\n\r\n");
 
             res = fins.read("D0", 2);
-            txtRes.AppendText("Read BOOL (D0-1) toString\r\n" + fins.WordToBin(res) + "\r\n\r\n");      // ゼロ埋めビット表記文字列
+            string WordToBin = fins.WordToBin(res);
+            txtRes.AppendText("Read BOOL (D0-1) toString\r\n" + WordToBin + "\r\n\r\n");      // ゼロ埋めビット表記文字列
 
-            BitArray bits = new BitArray(res.Reverse().ToArray());
+            BitArray bits = fins.toBitArray(res);
             StringBuilder sb = new StringBuilder();
             for (int i = bits.Length; i > 0; i--)
             {
@@ -621,22 +622,22 @@ namespace FinsMes
 
             res = fins.read("D40", 10);
             ushort[] datau16 = fins.toUInt16(res);
-            txtRes.AppendText("Read UINT x 10 (D430-49)\r\n" + String.Join(",", data16) + "\r\n\r\n");  // UINT型
+            txtRes.AppendText("Read UINT x 10 (D430-49)\r\n" + String.Join(",", datau16) + "\r\n\r\n");  // UINT型
 
             res = fins.read("D50", 10);
             uint[] datau32 = fins.toUInt32(res);
-            txtRes.AppendText("Read UDINT x 5 (D50-59)\r\n" + String.Join(",", data32) + "\r\n\r\n");   // UDINT型
+            txtRes.AppendText("Read UDINT x 5 (D50-59)\r\n" + String.Join(",", datau32) + "\r\n\r\n");   // UDINT型
 
             res = fins.read("D60", 8);
             ulong[] datau64 = fins.toUInt64(res);
-            txtRes.AppendText("Read ULINT x 2 (D60-67)\r\n" + String.Join(",", data64) + "\r\n\r\n");   // ULINT型
+            txtRes.AppendText("Read ULINT x 2 (D60-67)\r\n" + String.Join(",", datau64) + "\r\n\r\n");   // ULINT型
 
             res = fins.read("D70", 10);
             float[] dataf = fins.toFloat(res);
             txtRes.AppendText("Read REAL x 5 (D70-79)\r\n" + String.Join(",", dataf) + "\r\n\r\n");     // REAL型
 
             res = fins.read("D80", 8);
-            double[] datad = fins.toDoublet(res);
+            double[] datad = fins.toDouble(res);
             txtRes.AppendText("Read LREAL x 2 (D80-87)\r\n" + String.Join(",", datad) + "\r\n\r\n");    // LREAL型
 
             res = fins.read("D90", 10);

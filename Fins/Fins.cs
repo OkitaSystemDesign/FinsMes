@@ -454,9 +454,9 @@ namespace Osd.Omron
             return res;
         }
 
-        public byte[] MemOffset(string memstring, short offset)
+        public byte[] MemOffset(string memadrstr, short offset)
         {
-            string memtype = memstring.Substring(0, 1);
+            string memtype = memadrstr.Substring(0, 1);
             short memadr = 0;
             byte[] adr = new byte[4];
 
@@ -464,12 +464,12 @@ namespace Osd.Omron
             {
                 case "D":
                     adr[0] = 0x82;
-                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    memadr = (short)(int.Parse(memadrstr.Substring(1)) + offset);
                     Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 case "E":
-                    string[] strs = memstring.Split('_');
+                    string[] strs = memadrstr.Split('_');
                     memadr = (short)(int.Parse(strs[1]) + offset);
                     int bank = Convert.ToInt32(strs[0].Substring(1), 16);
                     if (bank < 16)
@@ -482,19 +482,19 @@ namespace Osd.Omron
 
                 case "W":
                     adr[0] = 0xB1;
-                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    memadr = (short)(int.Parse(memadrstr.Substring(1)) + offset);
                     Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 case "H":
                     adr[0] = 0xB2;
-                    memadr = (short)(int.Parse(memstring.Substring(1)) + offset);
+                    memadr = (short)(int.Parse(memadrstr.Substring(1)) + offset);
                     Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
                 default:
                     int cioadr;
-                    if (int.TryParse(memstring, out cioadr))
+                    if (int.TryParse(memadrstr, out cioadr))
                     {
                         adr[0] = 0xB0;
                         Array.Copy(BitConverter.GetBytes((short)(cioadr + offset)).Reverse().ToArray(), 0, adr, 1, 2);
@@ -505,7 +505,7 @@ namespace Osd.Omron
             return adr;
         }
 
-        public byte[] read(string memaddr, int readsize)
+        public byte[] read(string memadrstr, int readsize)
         {
             byte[] finscmd = new byte[8];
 
@@ -517,7 +517,7 @@ namespace Osd.Omron
 
             for (int cnt = 0; cnt < readnum + 1; cnt++)
             {
-                byte[] MemAddressArray = MemOffset(memaddr, (short)(cnt * 990));
+                byte[] MemAddressArray = MemOffset(memadrstr, (short)(cnt * 990));
                 short size = 0;
                 if (cnt == readnum)
                     size = (short)remainder;
@@ -552,7 +552,7 @@ namespace Osd.Omron
             return data;
         }
 
-        public void write(string memaddr, byte[] data)
+        public void write(string memadrstr, byte[] data)
         {
             if (data.Length % 2 == 1)
                 throw new Exception($"Write data must be an even number of bytes");
@@ -566,7 +566,7 @@ namespace Osd.Omron
 
             for (int cnt = 0; cnt < writenum + 1; cnt++)
             {
-                byte[] MemAddressArray = MemOffset(memaddr, (short)(cnt * 990));
+                byte[] MemAddressArray = MemOffset(memadrstr, (short)(cnt * 990));
                 short size = 0;
                 if (cnt == writenum)
                     size = (short)remainder;
@@ -600,9 +600,9 @@ namespace Osd.Omron
             }
         }
 
-        public void fill(string memaddr, int size, byte[] data)
+        public void fill(string memadrstr, int size, byte[] data)
         {
-            byte[] MemAddressArray = MemOffset(memaddr, 0);
+            byte[] MemAddressArray = MemOffset(memadrstr, 0);
             byte[] wordsize = BitConverter.GetBytes((short)size).Reverse().ToArray();
 
             byte[] finscmd = new byte[10];
@@ -844,15 +844,15 @@ namespace Osd.Omron
             }
         }
 
-        public void ErrorClear()
+        public void ErrorClear(byte[] code)
         {
             sbMes.Clear();
 
             byte[] finscmd = new byte[4];
             finscmd[0] = 0x21;
             finscmd[1] = 0x01;
-            finscmd[2] = 0xFF;
-            finscmd[3] = 0xFF;
+            finscmd[2] = code[0];
+            finscmd[3] = code[1];
 
             byte[] cmd = CreateFinsFrame(finscmd);
 
@@ -866,17 +866,19 @@ namespace Osd.Omron
             }
         }
 
-        public byte[] ErrorLogRead()
+        public byte[] ErrorLogRead(int startIndex, int count)
         {
             sbMes.Clear();
+            byte[] startidx = BitConverter.GetBytes((short)startIndex).Reverse().ToArray();
+            byte[] cnt = BitConverter.GetBytes((short)count).Reverse().ToArray();
 
             byte[] finscmd = new byte[6];
             finscmd[0] = 0x21;
             finscmd[1] = 0x02;
-            finscmd[2] = 0x00;
-            finscmd[3] = 0x00;
-            finscmd[4] = 0x00;
-            finscmd[5] = 0x0A;
+            finscmd[2] = startidx[0];
+            finscmd[3] = startidx[1];
+            finscmd[4] = cnt[0];
+            finscmd[5] = cnt[1];
 
             byte[] cmd = CreateFinsFrame(finscmd);
             byte[] data;
@@ -916,30 +918,6 @@ namespace Osd.Omron
             }
         }
 
-        public BitArray toBitArray(byte[] data)
-        {
-            BitArray bits = new BitArray(data);
-            return bits;
-        }
-
-        public bool[] toBoolArray(byte[] data)
-        {
-            bool[] Bools = new bool[data.Length * 8];
-
-            byte[] word = new byte[2];
-            for (int i = 0; i < data.Length / 2; i++)
-            {
-                word[0] = data[i * 2 + 1];
-                word[1] = data[i * 2];
-                BitArray bits = new BitArray(word);
-                for (int j = 0; j < bits.Length; j++)
-                {
-                    Bools[i * 16 + j] = bits[15 - j];
-                }
-            }
-            return Bools;
-        }
-
         public string WordToBin(byte[] data)
         {
             StringBuilder sb = new StringBuilder();
@@ -951,6 +929,26 @@ namespace Osd.Omron
             }
             return sb.ToString();
         }
+
+        public BitArray toBitArray(byte[] data)
+        {
+            BitArray bits = new BitArray(data.Reverse().ToArray());
+            return bits;
+        }
+
+        public bool[] toBoolArray(byte[] data)
+        {
+            bool[] Bools = new bool[data.Length * 8];
+            BitArray bits = new BitArray(data.Reverse().ToArray());
+
+            int bytesize = data.Length * 8;
+            for (int i = 0; i < bytesize; i++)
+            {
+                Bools[i] = bits[(bytesize - 1) - i];
+;            }
+            return Bools;
+        }
+
 
         public short[] toInt16(byte[] data)
         {
@@ -964,7 +962,7 @@ namespace Osd.Omron
             }
             return ret;
         }
-
+        
         public int[] toInt32(byte[] data)
         {
             int[] ret = new int[data.Length / 4];
@@ -972,7 +970,8 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 4, word, 0, 4);
+                Array.Copy(data, i * 4 + 2, word, 0, 2);
+                Array.Copy(data, i * 4, word, 2, 2);
                 ret[i] = BitConverter.ToInt32(word.Reverse().ToArray(), 0);
             }
             return ret;
@@ -985,7 +984,10 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 8, word, 0, 8);
+                Array.Copy(data, i * 8+6, word, 0, 2);
+                Array.Copy(data, i * 8+4, word, 2, 2);
+                Array.Copy(data, i * 8+2, word, 4, 2);
+                Array.Copy(data, i * 8, word, 6, 2);
                 ret[i] = BitConverter.ToInt64(word.Reverse().ToArray(), 0);
             }
             return ret;
@@ -1011,7 +1013,8 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 4, word, 0, 4);
+                Array.Copy(data, i * 4 + 2, word, 0, 2);
+                Array.Copy(data, i * 4, word, 2, 2);
                 ret[i] = BitConverter.ToUInt32(word.Reverse().ToArray(), 0);
             }
             return ret;
@@ -1024,7 +1027,10 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 8, word, 0, 8);
+                Array.Copy(data, i * 8 + 6, word, 0, 2);
+                Array.Copy(data, i * 8 + 4, word, 2, 2);
+                Array.Copy(data, i * 8 + 2, word, 4, 2);
+                Array.Copy(data, i * 8, word, 6, 2);
                 ret[i] = BitConverter.ToUInt64(word.Reverse().ToArray(), 0);
             }
             return ret;
@@ -1037,20 +1043,24 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 4, word, 0, 4);
+                Array.Copy(data, i * 4 + 2, word, 0, 2);
+                Array.Copy(data, i * 4, word, 2, 2);
                 ret[i] = BitConverter.ToSingle(word.Reverse().ToArray(), 0);
             }
             return ret;
         }
 
-        public double[] toDoublet(byte[] data)
+        public double[] toDouble(byte[] data)
         {
             double[] ret = new double[data.Length / 8];
             byte[] word = new byte[8];
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 8, word, 0, 8);
+                Array.Copy(data, i * 8 + 6, word, 0, 2);
+                Array.Copy(data, i * 8 + 4, word, 2, 2);
+                Array.Copy(data, i * 8 + 2, word, 4, 2);
+                Array.Copy(data, i * 8, word, 6, 2);
                 ret[i] = BitConverter.ToDouble(word.Reverse().ToArray(), 0);
             }
             return ret;
