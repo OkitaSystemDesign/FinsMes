@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,105 @@ namespace Osd.Omron
 
         public FinsException(string message, Exception inner)
             : base(message, inner) { }
+
+    }
+
+    public class CpuUnitInfo
+    {
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public byte DipSwitch { get; set; }
+        public ushort EMBankNum { get; set; }
+        public ushort ProgramSize { get; set; }
+        public ushort IOMSize { get; set; }
+        public ushort DMSize { get; set; }
+        public ushort TimSize { get; set; }
+        public ushort EMSize { get; set; }
+        public byte MemCardType { get; set; }
+        public ushort MemCardSize { get; set; }
+        public ushort[] UnitCode { get; set; }
+        public ushort RemortIONum { get; set; }
+        public ushort RackNum { get; set; }
+
+        public CpuUnitInfo()
+        {
+            UnitCode = new ushort[16];
+        }
+    }
+
+    public class Model
+    {
+        public string[] Name { get; set; }
+
+        public Model()
+        {
+            Name = new string[25];
+        }
+    }
+
+    public class CpuUnitStatus
+    {
+        public bool Run { get; set; }
+        public bool FlashMemoryAccess { get; set; }
+        public bool BatteryStatus { get; set; }
+        public bool CpuStatus { get; set; }
+
+        public byte Mode { get; set; }
+
+        public bool FalsError { get; set; }
+        public bool CycleTimeOver { get; set; }
+        public byte CpuTimeOver { get; set; }
+        public bool ProgramError { get; set; }
+        public bool IOSettingError { get; set; }
+        public bool IOPointOverflow { get; set; }
+        public bool FatalInnerBoardError { get; set; }
+        public bool DuplicationError { get; set; }
+        public bool IOBusError { get; set; }
+        public bool MemoryError { get; set; }
+
+        public bool OtherNonFatalErrors { get; set; }
+        public bool SpecialIOUnitSettingError { get; set; }
+        public bool CpuBusUnitSettingError { get; set; }
+        public bool BatteryError { get; set; }
+        public bool SysbusError { get; set; }
+        public bool SpecialIOUnitError { get; set; }
+        public bool CpuBusUnitError { get; set; }
+        public bool InnerBoardError { get; set; }
+        public bool IOVerificationError { get; set; }
+        public bool PlcSetupError { get; set; }
+        public bool BasicIOUnitError { get; set; }
+        public bool InterruptTaskError { get; set; }
+        public bool DuplexError { get; set; }
+        public bool FalError { get; set; }
+
+        public ushort ErrorCode { get; set; }
+        public string ErrorMessage { get; set; }
+
+    }
+
+    public class CycleTime
+    {
+        public double Ave { get; set; }
+        public double Max { get; set; }
+        public double Min { get; set; }
+    }
+
+    public class ErrorLogData
+    {
+        public ushort ErrorCode { get; set; }
+        public ushort ErrorMessage { get; set; }
+        public DateTime DT { get; set; }
+
+    }
+
+    public class ErrorLog
+    {
+        public ushort MaxRecordNo { get; set; }
+        public ushort StoredRecordNo { get; set; }
+        public ushort ReadRecordNum { get; set; }
+        public string WriteRecordNum { get; set; }
+
+        public ErrorLogData[] Data = new ErrorLogData[20];
 
     }
 
@@ -70,128 +170,173 @@ namespace Osd.Omron
 
 
             if (Code == 0x0101)
-                Message += Convert.ToString(Code, 16) + ": Local node not in network (自ノード ネットワーク未加入)";
+                Message += Code.ToString("X4") + ": Local node not in network (自ノード ネットワーク未加入)";
             else if (Code == 0x0102)
-                Message += Convert.ToString(Code, 16) + ": Token timeout (トークン タイムアウト)";
+                Message += Code.ToString("X4") + ": Token timeout (トークン タイムアウト)";
             else if (Code == 0x0103)
-                Message += Convert.ToString(Code, 16) + ": Retries failed (再送オーバー)";
+                Message += Code.ToString("X4") + ": Retries failed (再送オーバー)";
             else if (Code == 0x0104)
-                Message += Convert.ToString(Code, 16) + ": Too many send frames (送信許可フレーム数オーバー)";
+                Message += Code.ToString("X4") + ": Too many send frames (送信許可フレーム数オーバー)";
             else if (Code == 0x0105)
-                Message += Convert.ToString(Code, 16) + ": Node address range error (ノードアドレス設定範囲エラー)";
+                Message += Code.ToString("X4") + ": Node address range error (ノードアドレス設定範囲エラー)";
             else if (Code == 0x0106)
-                Message += Convert.ToString(Code, 16) + ": Node address duplication (ノードアドレス二重設定エラー)";
+                Message += Code.ToString("X4") + ": Node address duplication (ノードアドレス二重設定エラー)";
             else if (Code == 0x0201)
-                Message += Convert.ToString(Code, 16) + ": Destination node not in network (相手ノード ネットワーク未加入)";
+                Message += Code.ToString("X4") + ": Destination node not in network (相手ノード ネットワーク未加入)";
             else if (Code == 0x0202)
-                Message += Convert.ToString(Code, 16) + ": Unit missing (該当ユニットなし)";
+                Message += Code.ToString("X4") + ": Unit missing (該当ユニットなし)";
             else if (Code == 0x0203)
-                Message += Convert.ToString(Code, 16) + ": Third node missing (第三ノード ネットワーク未加入)";
+                Message += Code.ToString("X4") + ": Third node missing (第三ノード ネットワーク未加入)";
             else if (Code == 0x0204)
-                Message += Convert.ToString(Code, 16) + ": Destination node busy (相手ノード ビジー)";
+                Message += Code.ToString("X4") + ": Destination node busy (相手ノード ビジー)";
             else if (Code == 0x0205)
-                Message += Convert.ToString(Code, 16) + ": Response timeout (レスポンス タイムアウト)";
+                Message += Code.ToString("X4") + ": Response timeout (レスポンス タイムアウト)";
             else if (Code == 0x0301)
-                Message += Convert.ToString(Code, 16) + ": Communications controller error (通信コントローラ異常)";
+                Message += Code.ToString("X4") + ": Communications controller error (通信コントローラ異常)";
             else if (Code == 0x0302)
-                Message += Convert.ToString(Code, 16) + ": CPU Unit error (CPUユニット異常)";
+                Message += Code.ToString("X4") + ": CPU Unit error (CPUユニット異常)";
             else if (Code == 0x0303)
-                Message += Convert.ToString(Code, 16) + ": Controller error (該当コントローラ異常)";
+                Message += Code.ToString("X4") + ": Controller error (該当コントローラ異常)";
             else if (Code == 0x0304)
-                Message += Convert.ToString(Code, 16) + ": Unit number error (ユニット番号設定異常)";
+                Message += Code.ToString("X4") + ": Unit number error (ユニット番号設定異常)";
             else if (Code == 0x0401)
-                Message += Convert.ToString(Code, 16) + ": Undefined command (未定義コマンド)";
+                Message += Code.ToString("X4") + ": Undefined command (未定義コマンド)";
             else if (Code == 0x0402)
-                Message += Convert.ToString(Code, 16) + ": Not supported by model/version (サポート外機種/バージョン)";
+                Message += Code.ToString("X4") + ": Not supported by model/version (サポート外機種/バージョン)";
             else if (Code == 0x0501)
-                Message += Convert.ToString(Code, 16) + ": Destination address setting error (相手アドレス設定エラー)";
+                Message += Code.ToString("X4") + ": Destination address setting error (相手アドレス設定エラー)";
             else if (Code == 0x0502)
-                Message += Convert.ToString(Code, 16) + ": No routing tables (ルーチングテーブル未登録)";
+                Message += Code.ToString("X4") + ": No routing tables (ルーチングテーブル未登録)";
             else if (Code == 0x0503)
-                Message += Convert.ToString(Code, 16) + ": Routing table error (ルーチングテーブル異常)";
+                Message += Code.ToString("X4") + ": Routing table error (ルーチングテーブル異常)";
             else if (Code == 0x0504)
-                Message += Convert.ToString(Code, 16) + ": oo many relays (中継回数オーバー)";
+                Message += Code.ToString("X4") + ": oo many relays (中継回数オーバー)";
             else if (Code == 0x1001)
-                Message += Convert.ToString(Code, 16) + ": Command too long (コマンド長オーバー)";
+                Message += Code.ToString("X4") + ": Command too long (コマンド長オーバー)";
             else if (Code == 0x1002)
-                Message += Convert.ToString(Code, 16) + ": Command too short (コマンド長不足)";
+                Message += Code.ToString("X4") + ": Command too short (コマンド長不足)";
             else if (Code == 0x1003)
-                Message += Convert.ToString(Code, 16) + ": Elements/data don’t match (要素数/データ数不一致)";
+                Message += Code.ToString("X4") + ": Elements/data don’t match (要素数/データ数不一致)";
             else if (Code == 0x1004)
-                Message += Convert.ToString(Code, 16) + ": Command format error (コマンドフォーマットエラー)";
+                Message += Code.ToString("X4") + ": Command format error (コマンドフォーマットエラー)";
             else if (Code == 0x1005)
-                Message += Convert.ToString(Code, 16) + ": Header error (ヘッダ異常)";
+                Message += Code.ToString("X4") + ": Header error (ヘッダ異常)";
             else if (Code == 0x1101)
-                Message += Convert.ToString(Code, 16) + ": Area classification missing (エリア種別なし)";
+                Message += Code.ToString("X4") + ": Area classification missing (エリア種別なし)";
             else if (Code == 0x1102)
-                Message += Convert.ToString(Code, 16) + ": Access size error (アクセスサイズエラー)";
+                Message += Code.ToString("X4") + ": Access size error (アクセスサイズエラー)";
             else if (Code == 0x1103)
-                Message += Convert.ToString(Code, 16) + ": Address range error (アドレス範囲外指定エラー)";
+                Message += Code.ToString("X4") + ": Address range error (アドレス範囲外指定エラー)";
             else if (Code == 0x1104)
-                Message += Convert.ToString(Code, 16) + ": Address range exceeded (アドレス範囲オーバー)";
+                Message += Code.ToString("X4") + ": Address range exceeded (アドレス範囲オーバー)";
             else if (Code == 0x1106)
-                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Code.ToString("X4") + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x1109)
-                Message += Convert.ToString(Code, 16) + ": Relational error (相関関係エラー)";
+                Message += Code.ToString("X4") + ": Relational error (相関関係エラー)";
             else if (Code == 0x110A)
-                Message += Convert.ToString(Code, 16) + ": Duplicate data access (データ重複エラー)";
+                Message += Code.ToString("X4") + ": Duplicate data access (データ重複エラー)";
             else if (Code == 0x110B)
-                Message += Convert.ToString(Code, 16) + ": Response too long (レスポンス長オーバー)";
+                Message += Code.ToString("X4") + ": Response too long (レスポンス長オーバー)";
             else if (Code == 0x110C)
-                Message += Convert.ToString(Code, 16) + ": Parameter error (パラメータエラー)";
+                Message += Code.ToString("X4") + ": Parameter error (パラメータエラー)";
             else if (Code == 0x2002)
-                Message += Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
+                Message += Code.ToString("X4") + ": Protected (プロテクト中)";
             else if (Code == 0x2003)
-                Message += Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
+                Message += Code.ToString("X4") + ": Table missing (登録テーブルなし)";
             else if (Code == 0x2004)
-                Message += Convert.ToString(Code, 16) + ": Data missing (検索データなし)";
+                Message += Code.ToString("X4") + ": Data missing (検索データなし)";
             else if (Code == 0x2005)
-                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Code.ToString("X4") + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x2006)
-                Message += Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
+                Message += Code.ToString("X4") + ": File missing (該当ファイルなし)";
             else if (Code == 0x2007)
-                Message += Convert.ToString(Code, 16) + ": Data mismatch (照合異常)";
+                Message += Code.ToString("X4") + ": Data mismatch (照合異常)";
             else if (Code == 0x2101)
-                Message += Convert.ToString(Code, 16) + ": Read-only (リードオンリー)";
+                Message += Code.ToString("X4") + ": Read-only (リードオンリー)";
             else if (Code == 0x2102)
-                Message += Convert.ToString(Code, 16) + ": Protected (プロテクト中)";
+                Message += Code.ToString("X4") + ": Protected (プロテクト中)";
             else if (Code == 0x2103)
-                Message += Convert.ToString(Code, 16) + ": Cannot register (登録不可)";
+                Message += Code.ToString("X4") + ": Cannot register (登録不可)";
             else if (Code == 0x2105)
-                Message += Convert.ToString(Code, 16) + ": Program missing (該当プログラム番号なし)";
+                Message += Code.ToString("X4") + ": Program missing (該当プログラム番号なし)";
             else if (Code == 0x2106)
-                Message += Convert.ToString(Code, 16) + ": File missing (該当ファイルなし)";
+                Message += Code.ToString("X4") + ": File missing (該当ファイルなし)";
             else if (Code == 0x2107)
-                Message += Convert.ToString(Code, 16) + ": File name already exists (同一ファイル名あり)";
+                Message += Code.ToString("X4") + ": File name already exists (同一ファイル名あり)";
             else if (Code == 0x2108)
-                Message += Convert.ToString(Code, 16) + ": Cannot change (変更不可)";
+                Message += Code.ToString("X4") + ": Cannot change (変更不可)";
             else if (Code == 0x2201)
-                Message += Convert.ToString(Code, 16) + ": Not possible during execution (運転中のため動作不可)";
+                Message += Code.ToString("X4") + ": Not possible during execution (運転中のため動作不可)";
             else if (Code == 0x2202)
-                Message += Convert.ToString(Code, 16) + ": Not possible while running (停止中)";
+                Message += Code.ToString("X4") + ": Not possible while running (停止中)";
             else if (Code == 0x2203)
-                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, PROGRAM mode (本体モードが違う プログラムモード)";
+                Message += Code.ToString("X4") + ": Wrong PLC mode, PROGRAM mode (本体モードが違う プログラムモード)";
             else if (Code == 0x2204)
-                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, DEBUG mode (本体モードが違う デバッグモード)";
+                Message += Code.ToString("X4") + ": Wrong PLC mode, DEBUG mode (本体モードが違う デバッグモード)";
             else if (Code == 0x2205)
-                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, MONITOR mode (本体モードが違う モニタモード)";
+                Message += Code.ToString("X4") + ": Wrong PLC mode, MONITOR mode (本体モードが違う モニタモード)";
             else if (Code == 0x2206)
-                Message += Convert.ToString(Code, 16) + ": Wrong PLC mode, RUN mode (本体モードが違う 運転モード)";
+                Message += Code.ToString("X4") + ": Wrong PLC mode, RUN mode (本体モードが違う 運転モード)";
             else if (Code == 0x2207)
-                Message += Convert.ToString(Code, 16) + ": Specified node not polling node (指定ノードが管理局でない)";
+                Message += Code.ToString("X4") + ": Specified node not polling node (指定ノードが管理局でない)";
             else if (Code == 0x2208)
-                Message += Convert.ToString(Code, 16) + ": Step cannot be executed (ステップが実行不可)";
+                Message += Code.ToString("X4") + ": Step cannot be executed (ステップが実行不可)";
             else if (Code == 0x2301)
-                Message += Convert.ToString(Code, 16) + ": File device missing (ファイル装置なし)";
+                Message += Code.ToString("X4") + ": File device missing (ファイル装置なし)";
             else if (Code == 0x2302)
-                Message += Convert.ToString(Code, 16) + ": Memory missing (該当メモリなし)";
+                Message += Code.ToString("X4") + ": Memory missing (該当メモリなし)";
             else if (Code == 0x2303)
-                Message += Convert.ToString(Code, 16) + ": Clock missing (時計なし)";
+                Message += Code.ToString("X4") + ": Clock missing (時計なし)";
             else if (Code == 0x2401)
-                Message += Convert.ToString(Code, 16) + ": Table missing (登録テーブルなし)";
+                Message += Code.ToString("X4") + ": Table missing (登録テーブルなし)";
+            else if (Code == 0x2502)
+                Message += Code.ToString("X4") + ": Memory error (メモリ異常)";
+            else if (Code == 0x2503)
+                Message += Code.ToString("X4") + ": I/O setting nerror (I/O 設定異常)";
+            else if (Code == 0x2504)
+                Message += Code.ToString("X4") + ": Too many I/O points (I/O 点数オーバー)";
+            else if (Code == 0x2505)
+                Message += Code.ToString("X4") + ": CPU bus error (CPU バス異常)";
+            else if (Code == 0x2506)
+                Message += Code.ToString("X4") + ": I/O duplication (I/O 二重エラー)";
+            else if (Code == 0x2507)
+                Message += Code.ToString("X4") + ": I/O bus error (I/O バス異常)";
+            else if (Code == 0x2509)
+                Message += Code.ToString("X4") + ": SYSMAC BUS/2 error (SYSMAC BUS/2 異常)";
+            else if (Code == 0x250A)
+                Message += Code.ToString("X4") + ": CPU Bus Unit error (高機能ユニット異常)";
+            else if (Code == 0x250D)
+                Message += Code.ToString("X4") + ": SYSMAC BUS No. duplication (SYSBUS No. 二重使用)";
+            else if (Code == 0x250F)
+                Message += Code.ToString("X4") + ": Memory error (メモリ異常)";
+            else if (Code == 0x2510)
+                Message += Code.ToString("X4") + ": SYSMAC BUS terminator missing (SYSBUS エンド局なし)";
+            else if (Code == 0x2601)
+                Message += Code.ToString("X4") + ": No protection (プロテクト解除中)";
+            else if (Code == 0x2602)
+                Message += Code.ToString("X4") + ": Incorrect password (パスワード不一致)";
+            else if (Code == 0x2604)
+                Message += Code.ToString("X4") + ": Protected (プロテクト中)";
+            else if (Code == 0x2605)
+                Message += Code.ToString("X4") + ": Service already executing (サービス実行中)";
+            else if (Code == 0x2606)
+                Message += Code.ToString("X4") + ": Service stopped (サービス停止中)";
+            else if (Code == 0x2607)
+                Message += Code.ToString("X4") + ": No execution right (実行権なし)";
+            else if (Code == 0x2608)
+                Message += Code.ToString("X4") + ": Settings not complete (環境未設定)";
+            else if (Code == 0x2609)
+                Message += Code.ToString("X4") + ": Necessary items not set (必要項目未設定)";
+            else if (Code == 0x260A)
+                Message += Code.ToString("X4") + ": Number already defined (指定番号定義済み)";
+            else if (Code == 0x260B)
+                Message += Code.ToString("X4") + ": No protection (異常解除不可)";
+            else if (Code == 0x3001)
+                Message += Code.ToString("X4") + ": No access right (アクセス権なし)";
+            else if (Code == 0x4001)
+                Message += Code.ToString("X4") + ": Service aborted (サービス中断)";
             else
-                Message += "FINS END CODE = " + Convert.ToString(Code, 16);
-
+                Message += Code.ToString("X4");
 
             return Message;
         }
@@ -492,6 +637,12 @@ namespace Osd.Omron
                     Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
                     break;
 
+                case "A":
+                    adr[0] = 0xB3;
+                    memadr = (short)(int.Parse(memadrstr.Substring(1)) + offset);
+                    Array.Copy(BitConverter.GetBytes(memadr).Reverse().ToArray(), 0, adr, 1, 2);
+                    break;
+
                 default:
                     int cioadr;
                     if (int.TryParse(memadrstr, out cioadr))
@@ -713,10 +864,10 @@ namespace Osd.Omron
         {
             sbMes.Clear();
 
-            byte[] finscmd = new byte[3];
+            byte[] finscmd = new byte[2];
             finscmd[0] = 0x05;
             finscmd[1] = 0x01;
-            finscmd[2] = 0x00;
+            //finscmd[2] = 0x00;
 
             byte[] cmd = CreateFinsFrame(finscmd);
             byte[] data;
@@ -735,6 +886,35 @@ namespace Osd.Omron
             }
             return data;
         }
+
+        public byte[] ReadConnectionData(byte address, byte size)
+        {
+            sbMes.Clear();
+
+            byte[] finscmd = new byte[4];
+            finscmd[0] = 0x05;
+            finscmd[1] = 0x02;
+            finscmd[2] = address;
+            finscmd[3] = size;
+
+            byte[] cmd = CreateFinsFrame(finscmd);
+            byte[] data;
+
+            if (useTcp)
+            {
+                byte[] res = TcpSend(cmd);
+                data = new byte[res.Length - 30];
+                Array.Copy(res, 30, data, 0, data.Length);
+            }
+            else
+            {
+                byte[] res = UdpSend(cmd);
+                data = new byte[res.Length - 14];
+                Array.Copy(res, 14, data, 0, data.Length);
+            }
+            return data;
+        }
+
 
         public byte[] ReadUnitStatus()
         {
@@ -945,7 +1125,8 @@ namespace Osd.Omron
             for (int i = 0; i < bytesize; i++)
             {
                 Bools[i] = bits[(bytesize - 1) - i];
-;            }
+                ;
+            }
             return Bools;
         }
 
@@ -962,7 +1143,7 @@ namespace Osd.Omron
             }
             return ret;
         }
-        
+
         public int[] toInt32(byte[] data)
         {
             int[] ret = new int[data.Length / 4];
@@ -984,9 +1165,9 @@ namespace Osd.Omron
 
             for (int i = 0; i < ret.Length; i++)
             {
-                Array.Copy(data, i * 8+6, word, 0, 2);
-                Array.Copy(data, i * 8+4, word, 2, 2);
-                Array.Copy(data, i * 8+2, word, 4, 2);
+                Array.Copy(data, i * 8 + 6, word, 0, 2);
+                Array.Copy(data, i * 8 + 4, word, 2, 2);
+                Array.Copy(data, i * 8 + 2, word, 4, 2);
                 Array.Copy(data, i * 8, word, 6, 2);
                 ret[i] = BitConverter.ToInt64(word.Reverse().ToArray(), 0);
             }
@@ -1073,5 +1254,194 @@ namespace Osd.Omron
             return ret;
         }
 
+
+        public CpuUnitInfo SetCpuUnitInfo(byte[] res)
+        {
+            CpuUnitInfo info = new CpuUnitInfo();
+
+
+            byte[] name = new byte[20];
+            Array.Copy(res, name, 20);
+            info.Name = Encoding.UTF8.GetString(name).Trim();
+
+            byte[] ver = new byte[20];
+            Array.Copy(res, 20, ver, 0, 20);
+            info.Version = Encoding.UTF8.GetString(ver).Trim();
+
+            info.DipSwitch = res[40];                           // DipSwitch
+
+            info.EMBankNum = BitConverter.ToUInt16(res, 41);    // EM Bank
+
+            byte[] tmpEndian = new byte[2];
+            tmpEndian[0] = res[81];
+            tmpEndian[1] = res[80];
+            info.ProgramSize = BitConverter.ToUInt16(tmpEndian, 0); // ProgramSize
+
+            info.IOMSize = (ushort)res[82];                     // IOM
+
+            tmpEndian[0] = res[84];
+            tmpEndian[1] = res[83];
+            info.DMSize = BitConverter.ToUInt16(tmpEndian, 0);  // DM CH Size
+
+            info.TimSize = (ushort)res[85];                     // Timer Size
+            info.EMSize = (ushort)res[86];                      // EM Size
+            info.MemCardType = res[89];                         // MemCard Type
+
+            tmpEndian[0] = res[91];
+            tmpEndian[1] = res[90];
+            info.MemCardSize = BitConverter.ToUInt16(tmpEndian, 0);     // MemCard Size
+
+            for (int i = 0; i < 16; i++)
+            {
+                tmpEndian[0] = res[92 + i + 1];
+                tmpEndian[1] = res[92 + i];
+                info.UnitCode[i] = BitConverter.ToUInt16(tmpEndian, 0);     // 0-15号機 ユニットID
+            }
+
+            info.RemortIONum = (ushort)res[156];
+            info.RackNum = (ushort)res[157];
+
+            return info;
+        }
+
+        public Model SetConnectionData(byte[] res)
+        {
+            Model model = new Model();
+
+            // 要素数
+            int UnitNum = (int)(res[0] & 0x7F);
+
+            // 形式
+            byte[] UnitNameArray = new byte[20];
+
+            for (int i = 0; i < UnitNum; i++)
+            {
+                int UnitNo = (int)(res[1 + i * 21] - 16);
+                Array.Copy(res, 1 + i * 21 + 1, UnitNameArray, 0, 20);
+                model.Name[UnitNo] = Encoding.UTF8.GetString(UnitNameArray).Trim();
+            }
+
+            return model;
+        }
+
+        public CpuUnitStatus SetCpuUnitStatus(byte[] res)
+        {
+            CpuUnitStatus status = new CpuUnitStatus();
+
+            status.Run = (res[0] & 0b00000001) != 0;
+            status.FlashMemoryAccess = (res[0] & 0b00000010) != 0;
+            status.BatteryStatus = (res[0] & 0b00000100) != 0;
+            status.CpuStatus = (res[0] & 0b10000000) != 0;
+
+            status.Mode = res[1];
+
+            status.FalsError = (res[3] & 0b01000000) != 0;
+
+            status.CycleTimeOver = (res[2] & 0b00000001) != 0;
+            status.ProgramError = (res[2] & 0b00000010) != 0;
+            status.IOSettingError = (res[2] & 0b00000100) != 0;
+            status.IOPointOverflow = (res[2] & 0b00001000) != 0;
+            status.FatalInnerBoardError = (res[2] & 0b00010000) != 0;
+            status.DuplicationError = (res[2] & 0b00100000) != 0;
+            status.IOBusError = (res[2] & 0b01000000) != 0;
+            status.MemoryError = (res[2] & 0b10000000) != 0;
+
+            status.OtherNonFatalErrors = (res[5] & 0b00000001) != 0;
+            status.SpecialIOUnitSettingError = (res[5] & 0b00000100) != 0;
+            status.CpuBusUnitSettingError = (res[5] & 0b00001000) != 0;
+            status.BatteryError = (res[5] & 0b00010000) != 0;
+            status.SysbusError = (res[5] & 0b00100000) != 0;
+            status.SpecialIOUnitError = (res[5] & 0b01000000) != 0;
+            status.CpuBusUnitError = (res[5] & 0b10000000) != 0;
+
+            status.InnerBoardError = (res[4] & 0b00000001) != 0;
+            status.IOVerificationError = (res[4] & 0b00000010) != 0;
+            status.PlcSetupError = (res[4] & 0b00000100) != 0;
+            status.BasicIOUnitError = (res[4] & 0b00010000) != 0;
+            status.InterruptTaskError = (res[4] & 0b00100000) != 0;
+            status.DuplexError = (res[4] & 0b01000000) != 0;
+            status.FalError = (res[4] & 0b10000000) != 0;
+
+            status.ErrorCode = BitConverter.ToUInt16(res, 8);
+
+            byte[] msg = new byte[16];
+            Array.Copy(res, 10, msg, 0, 16);
+            status.ErrorMessage = Encoding.UTF8.GetString(msg).Trim();
+
+            return status;
+        }
+
+        public CycleTime SetCycleTime(byte[] res)
+        {
+            CycleTime ct = new CycleTime();
+
+            byte[] tmpArray = new byte[4];
+
+            Array.Copy(res, 0, tmpArray, 0, 4);
+            Array.Reverse(tmpArray);
+            ct.Ave = (double)BitConverter.ToUInt32(tmpArray, 0) * 0.1;
+
+            Array.Copy(res, 4, tmpArray, 0, 4);
+            Array.Reverse(tmpArray);
+            ct.Max = (double)BitConverter.ToUInt32(tmpArray, 0) * 0.1;
+
+            Array.Copy(res, 8, tmpArray, 0, 4);
+            Array.Reverse(tmpArray);
+            ct.Min = (double)BitConverter.ToUInt32(tmpArray, 0) * 0.1;
+
+            return ct;
+        }
+
+        public ErrorLog SetErrorLog(byte[] res)
+        {
+            ErrorLog log = new ErrorLog();
+
+            byte[] tmpArray = new byte[2];
+            Array.Copy(res, 0, tmpArray, 0, 2);
+            Array.Reverse(tmpArray);
+            log.MaxRecordNo = BitConverter.ToUInt16(tmpArray, 0);
+
+            Array.Copy(res, 2, tmpArray, 0, 2);
+            Array.Reverse(tmpArray);
+            log.StoredRecordNo = BitConverter.ToUInt16(tmpArray, 0);
+
+            Array.Copy(res, 4, tmpArray, 0, 2);
+            Array.Reverse(tmpArray);
+            log.ReadRecordNum = BitConverter.ToUInt16(tmpArray, 0);
+
+            for (int i = 0; i < 20; i++)
+            {
+                log.Data[i] = new ErrorLogData();
+            }
+
+            if (log.ReadRecordNum > 0)
+            {
+                for (int i = 0; i < log.ReadRecordNum; i++)
+                {
+                    byte[] tmpData = new byte[10];
+                    Array.Copy(res, 6 + i * 10, tmpData, 0, 10);
+
+                    Array.Copy(tmpData, 0, tmpArray, 0, 2);
+                    Array.Reverse(tmpArray);
+                    log.Data[i].ErrorCode = BitConverter.ToUInt16(tmpArray, 0);
+
+                    Array.Copy(tmpData, 2, tmpArray, 0, 2);
+                    Array.Reverse(tmpArray);
+                    log.Data[i].ErrorMessage = BitConverter.ToUInt16(tmpArray, 0);
+
+                    string dt = tmpData[8].ToString("X2") + "/"
+                                + tmpData[9].ToString("X2") + "/"
+                                + tmpData[6].ToString("X2") + " "
+                                + tmpData[7].ToString("X2") + ":"
+                                + tmpData[4].ToString("X2") + ":"
+                                + tmpData[5].ToString("X2");
+
+                    log.Data[i].DT = DateTime.Parse(dt);
+
+                }
+            }
+
+            return log;
+        }
     }
 }
